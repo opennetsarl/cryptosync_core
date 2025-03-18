@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "onsp_cryptocurrency"
+name = "cryptosync_core"
 version = "0.1.0"
 description = ""
 authors = ["Open Net Sàrl <support@open-net.ch>"]

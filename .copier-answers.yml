@@ -6,5 +6,5 @@ modules_name: cryptosync,cryptosync_coingecko,cryptosync_ethereum,cryptosync_kra
 odoo_version: 18.0
 org_name: Open Net Sàrl
 org_slug: ons
-repo_name: CryptoSync
-repo_slug: onsp_cryptocurrency
+repo_name: CryptoSync Core
+repo_slug: cryptosync_core
