@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        name="Cryptocurrencies"
+        id="menu_crypto_main"
+        sequence="62">
+
+        <menuitem
+            name="Configuration"
+            id="menu_crypto_configuration"
+            sequence="900">
+
+            <menuitem
+                name="Settings"
+                id="menu_crypto_settings"
+                action="action_res_config_settings_crypto"
+                sequence="10"/>
+
+            <menuitem
+                name="Currencies"
+                id="menu_crypto_currencies"
+                action="base.action_currency_form"
+                sequence="20"/>
+
+            <menuitem
+                name="Providers"
+                id="menu_crypto_provider"
+                action="action_crypto_provider"
+                sequence="30"
+                groups="base.group_no_one"/>
+
+            <menuitem
+                name="Account Rules"
+                id="menu_crypto_account_rule"
+                action="action_crypto_account_rule"
+                sequence="50"/>
+
+            <menuitem
+                name="Wizards"
+                id="menu_crypto_wizards"
+                sequence="70">
+
+                <menuitem
+                    name="Import Transactions"
+                    id="menu_crypto_import_transactions_wizard"
+                    action="action_crypto_import_transactions_wizard"
+                    sequence="10"/>
+
+                <menuitem
+                    name="Generate Statements"
+                    id="menu_crypto_generate_statements_wizard"
+                    action="action_crypto_generate_statements_wizard"
+                    sequence="20"/>
+
+            </menuitem>
+
+            <menuitem
+                name="Data"
+                id="menu_crypto_data"
+                sequence="80">
+
+                <menuitem
+                    name="All Raw Transactions"
+                    id="menu_crypto_transaction"
+                    action="action_crypto_transaction"
+                    sequence="10"/>
+
+                <menuitem
+                    name="All Processed Transactions"
+                    id="menu_crypto_transaction_line"
+                    action="action_crypto_transaction_line"
+                    sequence="20"/>
+
+                <menuitem
+                    name="All Statements"
+                    id="menu_account_bank_statement"
+                    action="account.action_bank_statement_tree"
+                    sequence="30"/>
+
+            </menuitem>
+
+        </menuitem>
+
+    </menuitem>
+
+</odoo>

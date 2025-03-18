@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_crypto_api_key_form" model="ir.ui.view">
+        <field name="name">crypto.api.key.form</field>
+        <field name="model">crypto.api.key</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="description"/>
+                        <field name="name" password="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_crypto_api_key_tree" model="ir.ui.view">
+        <field name="name">crypto.api.key.tree</field>
+        <field name="model">crypto.api.key</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="description"/>
+            </list>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_crypto_transaction_form" model="ir.ui.view">
+        <field name="name">crypto.transaction.form</field>
+        <field name="model">crypto.transaction</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0" delete="1">
+                <header>
+                    <button name="process"
+                            type="object"
+                            string="Process"
+                            class="oe_highlight"
+                            invisible="state not in ('draft', 'error')"/>
+                    <button name="process"
+                            type="object"
+                            string="Reprocess"
+                            class="oe_highlight"
+                            invisible="state != 'ready'"/>
+                    <button name="ignore"
+                            type="object"
+                            string="Ignore"
+                            invisible="state not in ('draft', 'error', 'ready')"/>
+                    <button name="revert_ignore"
+                            type="object"
+                            string="Revert Ignore"
+                            invisible="state != 'ignored'"/>
+                    <button name="reset"
+                            type="object"
+                            string="Reset"
+                            invisible="state not in ('error', 'ready')"/>
+                    <button name="ignore_rest"
+                            type="object"
+                            string="Ignore Rest Lines"
+                            invisible="state not in ('ready', 'partially')"/>
+                    <button name="revert_ignore_rest"
+                            type="object"
+                            string="Revert Ignored Lines"
+                            invisible="state != 'done' or not has_ignored_line"/>
+                    <field name="state" widget="statusbar" statusbar_visible="waiting,draft,ready,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <field name="explorer_link" invisible="1"/>
+                        <button name="open_on_explorer"
+                                type="object"
+                                string="Open on explorer"
+                                class="oe_stat_button"
+                                icon="fa-link"
+                                invisible="not explorer_link"/>
+                    </div>
+                    <group>
+                        <field name="name"/>
+                        <field name="wallet_id"/>
+                        <field name="from_csv" invisible="not from_csv"/>
+                        <field name="error" invisible="state != 'error'"/>
+                    </group>
+                    <notebook>
+                        <page string="Outputs">
+                            <field name="output_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="date" optional="show"/>
+                                    <field name="address" optional="show"/>
+                                    <field name="value" optional="show"/>
+                                    <field name="value_str" optional="hide"/>
+                                    <field name="currency_id" optional="hide"/>
+                                    <field name="description" optional="hide"/>
+                                    <field name="state" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Raw" groups="base.group_no_one">
+                            <field name="raw" widget="jsonb"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_crypto_transaction_tree" model="ir.ui.view">
+        <field name="name">crypto.transaction.tree</field>
+        <field name="model">crypto.transaction</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="1">
+                <field name="wallet_id"/>
+                <field name="name"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_crypto_transaction_search" model="ir.ui.view">
+        <field name="name">crypto.transaction.search</field>
+        <field name="model">crypto.transaction</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="wallet_id"/>
+                <filter string="Waiting" name="waiting" domain="[('state', '=', 'waiting')]"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Ignored" name="ignored" domain="[('state', '=', 'ignored')]"/>
+                <filter string="Error" name="error" domain="[('state', '=', 'error')]"/>
+                <filter string="Ready" name="ready" domain="[('state', '=', 'ready')]"/>
+                <filter string="Partially Done" name="partially" domain="[('state', '=', 'partially')]"/>
+                <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
+                <filter name="group_by_state" string="State" context="{'group_by': 'state'}"/>
+                <filter name="group_by_wallet" string="Wallet" context="{'group_by': 'wallet_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_crypto_transaction" model="ir.actions.act_window">
+        <field name="name">Raw Transactions</field>
+        <field name="res_model">crypto.transaction</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{"search_default_draft": 1, "search_default_error": 1}</field>
+    </record>
+
+    <!-- ir.actions.server -->
+    <record id="action_crypto_transaction_process" model="ir.actions.server">
+        <field name="name">Process</field>
+        <field name="model_id" ref="cryptosync.model_crypto_transaction"/>
+        <field name="binding_model_id" ref="cryptosync.model_crypto_transaction"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">records.process()</field>
+    </record>
+
+    <record id="action_crypto_transaction_ignore" model="ir.actions.server">
+        <field name="name">Ignore</field>
+        <field name="model_id" ref="cryptosync.model_crypto_transaction"/>
+        <field name="binding_model_id" ref="cryptosync.model_crypto_transaction"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">records.ignore()</field>
+    </record>
+
+    <record id="action_crypto_transaction_revert_ignore" model="ir.actions.server">
+        <field name="name">Revert Ignore</field>
+        <field name="model_id" ref="cryptosync.model_crypto_transaction"/>
+        <field name="binding_model_id" ref="cryptosync.model_crypto_transaction"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">records.revert_ignore()</field>
+    </record>
+
+    <record id="action_crypto_transaction_reset" model="ir.actions.server">
+        <field name="name">Reset</field>
+        <field name="model_id" ref="cryptosync.model_crypto_transaction"/>
+        <field name="binding_model_id" ref="cryptosync.model_crypto_transaction"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">records.reset()</field>
+    </record>
+
+    <record id="action_crypto_transaction_ignore_rest" model="ir.actions.server">
+        <field name="name">Ignore Rest Lines</field>
+        <field name="model_id" ref="cryptosync.model_crypto_transaction"/>
+        <field name="binding_model_id" ref="cryptosync.model_crypto_transaction"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">records.ignore_rest()</field>
+    </record>
+
+    <record id="action_crypto_transaction_revert_ignore_rest" model="ir.actions.server">
+        <field name="name">Revert Ignored Lines</field>
+        <field name="model_id" ref="cryptosync.model_crypto_transaction"/>
+        <field name="binding_model_id" ref="cryptosync.model_crypto_transaction"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">records.revert_ignore_rest()</field>
+    </record>
+
+</odoo>

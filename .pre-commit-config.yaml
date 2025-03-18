@@ -15,7 +15,7 @@ exclude: |
   ^docs/_templates/.*\.html$|
   # You don't usually want a bot to modify your legal texts
   (LICENSE.*|COPYING.*)
-files: ^(crypto_kit|crypto_rate|crypto_rate_coingecko|crypto_sync|crypto_sync_etherscan|crypto_sync_kraken|account_accountant_crypto)/
+files: ^(cryptosync|cryptosync_coingecko|cryptosync_ethereum|cryptosync_kraken)/
 repos:
   - repo: local
     hooks:

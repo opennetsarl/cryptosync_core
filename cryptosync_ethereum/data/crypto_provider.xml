@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ethereum_provider" model="crypto.provider">
+        <field name="name">Ethereum</field>
+        <field name="code">ethereum</field>
+        <field name="prefix">E</field>
+        <field name="output_type">statement</field>
+        <field name="image" type="base64" file="cryptosync_ethereum/static/description/icon.svg"/>
+    </record>
+
+</odoo>

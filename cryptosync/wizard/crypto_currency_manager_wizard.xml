@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_crypto_currency_manager_wizard_form" model="ir.ui.view">
+        <field name="name">crypto.currency.manager.wizard</field>
+        <field name="model">crypto.currency.manager.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group colspan="2">
+                            <field name="name"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Suggestions">
+                            <field name="suggestion_ids">
+                                <list no_open="1">
+                                    <field name="full_name"/>
+                                    <field name="name"/>
+                                    <button name="action_choose" string="Select" class="oe_highlight" type="object"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button string="Cancel" special="cancel" class="btn-secondary" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_crypto_currency_manager_wizard" model="ir.actions.act_window">
+        <field name="name">Currency Manager</field>
+        <field name="res_model">crypto.currency.manager.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

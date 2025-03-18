@@ -13,7 +13,7 @@ ruff = "^0.1"
 
 [tool.ruff]
 line-length = 120
-include = ['crypto_kit/*.py', 'crypto_rate/*.py', 'crypto_rate_coingecko/*.py', 'crypto_sync/*.py', 'crypto_sync_etherscan/*.py', 'crypto_sync_kraken/*.py', 'account_accountant_crypto/*.py']
+include = ['cryptosync/*.py', 'cryptosync_coingecko/*.py', 'cryptosync_ethereum/*.py', 'cryptosync_kraken/*.py']
 
 [tool.ruff.lint]
 select = [
@@ -42,7 +42,7 @@ ignore = [
 ignore-init-module-imports = true
 
 [tool.ruff.per-file-ignores]
-"__init__.py" = ["F401"]
+"__init__.py" = ["F401", "I001"]
 
 [tool.ruff.format]
 quote-style = "double"

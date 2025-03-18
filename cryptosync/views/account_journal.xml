@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_journal_form_inherit_crypto" model="ir.ui.view">
+        <field name="name">account.journal.form.inherit.crypto</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='bank_account_number']" position="inside">
+                <field name="crypto_provider_id" widget="radio" groups="cryptosync.group_crypto"
+                    invisible="bank_statements_source != 'crypto'" required="bank_statements_source == 'crypto'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- <record id="view_account_journal_dashboard_kanban_inherit_crypto" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban.inherit.crypto</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='bank_cash_buttons']" position="inside">
+                <button t-if="dashboard.bank_statements_source == 'crypto' and dashboard.crypto_transaction_line_count > 0"
+                        name="action_open_crypto_generate_statements_wizard" type="object"
+                        class="btn btn-secondary d-block text-nowrap"
+                        groups="cryptosync.group_crypto"
+                    ><t t-out="dashboard.crypto_transaction_line_count"/> transactions waiting statement</button>
+            </xpath>
+        </field>
+    </record> -->
+
+    <record id="view_account_journal_tree_crypto" model="ir.ui.view">
+        <field name="name">account.journal.tree.crypto</field>
+        <field name="model">account.journal</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" create="0">
+                <field name="name"/>
+                <field name="crypto_provider_id"/>
+                <field name="bank_account_id"/>
+                <field name="currency_id"/>
+                <field name="code" optional="show"/>
+                <field name="default_account_id" optional="show"/>
+                <field name="suspense_account_id" optional="hide"/>
+                <field name="profit_account_id" optional="hide"/>
+                <field name="loss_account_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+</odoo>

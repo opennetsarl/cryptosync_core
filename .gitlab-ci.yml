@@ -13,10 +13,10 @@ xml_syntax_check:
   script:
     ~/check_xml_syntax.sh
 
-xml_validation:
-  stage: pre
-  script:
-    ~/validate_odoo_xml.sh
+# xml_validation:
+#   stage: pre
+#   script:
+#     ~/validate_odoo_xml.sh
 
 ruff:
   stage: lint

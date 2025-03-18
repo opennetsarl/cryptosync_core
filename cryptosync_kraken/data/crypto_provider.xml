@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="kraken_provider" model="crypto.provider">
+        <field name="name">Kraken</field>
+        <field name="code">kraken</field>
+        <field name="prefix">K</field>
+        <field name="output_type">move</field>
+        <field name="image" type="base64" file="cryptosync_kraken/static/description/icon.png"/>
+    </record>
+
+</odoo>

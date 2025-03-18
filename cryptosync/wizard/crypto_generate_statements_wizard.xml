@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_crypto_generate_statements_wizard_form" model="ir.ui.view">
+        <field name="name">crypto.generate.statements.wizard.form</field>
+        <field name="model">crypto.generate.statements.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="company_id" invisible="1"/>
+                        <field name="company_partner_id" invisible="1"/>
+                        <field name="output_type" invisible="1"/>
+                        <field name="journal_ids" widget="many2many_tags" invisible="output_type != 'statement'"/>
+                        <field name="wallet_ids" widget="many2many_tags" invisible="output_type != 'move'"/>
+                    </group>
+                    <group>
+                        <field name="date_from" invisible="output_type != 'statement'"/>
+                        <field name="date_to" invisible="output_type != 'statement'"/>
+                        <field name="group_by" invisible="output_type != 'statement'"/>
+                        <field name="output_journal_id" invisible="output_type != 'move'"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_generate" type="object" string="Generate" class="oe_highlight"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_crypto_generate_statements_wizard" model="ir.actions.act_window">
+        <field name="name">Generate Statements/Moves</field>
+        <field name="res_model">crypto.generate.statements.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

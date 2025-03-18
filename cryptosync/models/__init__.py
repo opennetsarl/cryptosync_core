@@ -1,0 +1,15 @@
+from . import (
+    account_bank_statement,
+    account_bank_statement_line,
+    account_journal,
+    account_move,
+    account_move_line,
+    crypto_account_rule,
+    crypto_api_key,
+    crypto_provider,
+    crypto_transaction,
+    crypto_transaction_line,
+    res_currency,
+    res_currency_rate,
+    res_partner_bank,
+)

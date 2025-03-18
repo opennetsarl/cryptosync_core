@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="coingecko_provider" model="crypto.provider">
+        <field name="name">CoinGecko</field>
+        <field name="code">coingecko</field>
+        <field name="prefix">CG</field>
+        <field name="provide_tx">0</field>
+        <field name="provide_rate">1</field>
+        <field name="image" type="base64" file="cryptosync_coingecko/static/description/icon.svg"/>
+    </record>
+
+</odoo>

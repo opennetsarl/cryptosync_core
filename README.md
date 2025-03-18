@@ -1,22 +1,20 @@
-![Stars](https://img.shields.io/github/stars/nymtech/odoo-addons?style=social)
-![Watchers](https://img.shields.io/github/watchers/nymtech/odoo-addons?style=social)
-![Forks](https://img.shields.io/github/forks/nymtech/odoo-addons?style=social)
+# CryptoSync for Odoo 18.0
 
-![LastCommit](https://img.shields.io/github/last-commit/nymtech/odoo-addons?color=green)
+## Core AGPL addons
 
-# CryptoKit for Odoo 14.0
+| Addon                                        | Description                                                           |
+| -------------------------------------------- | --------------------------------------------------------------------- |
+| [CryptoSync](cryptosync)                     | Cryptocurrency base module for Odoo                                   |
+| [CryptoSync CoinGecko](cryptosync_coingecko) | Get rates from [CoinGecko](https://www.coingecko.com/)                |
+| [CryptoSync Ethereum](cryptosync_ethereum)   | Sync transactions from [Etherscan](https://etherscan.io/)             |
+| [CryptoSync Kraken](cryptosync_kraken)       | Sync transactions from the [Kraken](https://www.kraken.com/) exchange |
 
-## Available addons
+# Premium OPL addons
 
-| Addon                                                  | Description                                                        |
-| ------------------------------------------------------ | ------------------------------------------------------------------ |
-| [CryptoKit](crypto_kit)                                | Cryptocurrency base module for Odoo                                |
-| [CryptoRate](crypto_rate)                              | Base module for getting cryptocurrency rates in Odoo               |
-| [CryptoRate: CoinGecko](crypto_rate_coingecko)         | Get rates from [CoinGecko](https://www.coingecko.com/)             |
-| [CryptoSync](crypto_sync)                              | Base module for syncing cryptocurrency transactions in Odoo        |
-| [CryptoSync: Etherscan](crypto_sync_etherscan)         | Sync transactions from [Etherscan](https://etherscan.io/)          |
-| [CryptoSync: Kraken](crypto_sync_kraken)               | Sync transactions from a [Kraken](https://www.kraken.com/) account |
-| [account_accountant_crypto](account_accountant_crypto) | Technical module                                                   |
+| Addon                                          | Description                                                           |
+| ---------------------------------------------- | --------------------------------------------------------------------- |
+| [CryptoSync Binance](cryptosync_binance)       | Import transactions from [Binance](https://www.binance.com/) CSV      |
+| [CryptoSync Swissquote](cryptosync_swissquote) | Import transactions from [Swissquote](https://www.swissquote.ch/) CSV |
 
 ## Contributors
 
@@ -27,7 +25,7 @@
 
 ### Financial Support
 
-- [Nym Technologies SA](https://nymtech.net/) (Main Founder)
+- [Nym Technologies SA](https://nymtech.net/)
 - [Bity SA](https://bity.com/)
 
 ### Special Thanks
@@ -39,4 +37,4 @@
 
 This repository is licensed under [AGPL-3.0](LICENSE).
 
-However, each module can have a totally different license. Consult each module's `__manifest__.py` file, which contains a `license` key that explains its license.
+However, each module can have a totally different license, as long as they adhere to Open Net Sàrl. Consult each module's `__manifest__.py` file, which contains a `license` key that explains its license.

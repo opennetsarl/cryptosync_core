@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_crypto_import_exchange_wizard_form" model="ir.ui.view">
+        <field name="name">crypto.import.exchange.wizard.form</field>
+        <field name="model">crypto.import.exchange.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="provider_id" invisible="1"/>
+                        <field name="company_id" invisible="1"/>
+                        <field name="company_partner_id" invisible="1"/>
+                        <field name="wallet_id" context="{'default_crypto_provider_id': provider_id, 'default_partner_id': company_partner_id}"/>
+                        <field name="no_api" invisible="not provider"/>
+                        <field name="currency_ids" widget="many2many_tags"/>
+                        <div class="alert alert-warning" role="alert" invisible="not no_api">
+                            <p>If API connection is disable, only CSV imports will be available!</p>
+                        </div>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Confirm" name="action_create" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_crypto_import_exchange_wizard" model="ir.actions.act_window">
+        <field name="name">Import a new Account</field>
+        <field name="res_model">crypto.import.exchange.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

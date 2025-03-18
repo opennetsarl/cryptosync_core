@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_res_config_settings_form_inherit_crypto" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.crypto</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Cryptocurrencies" string="Cryptocurrencies" name="cryptocurrencies"
+                    logo="/cryptosync/static/description/icon.png" groups="cryptosync.group_crypto"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_res_config_settings_crypto" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'cryptocurrencies', 'bin_size': False}</field>
+    </record>
+
+</odoo>
