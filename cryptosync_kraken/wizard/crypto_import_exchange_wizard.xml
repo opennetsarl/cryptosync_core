@@ -7,10 +7,14 @@
         <field name="inherit_id" ref="cryptosync.view_crypto_import_exchange_wizard_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='no_api']" position="after">
-                <field name="kraken_api_key_id" context="{'default_description': 'Kraken API Key'}"
-                    invisible="provider != 'kraken' or no_api" required="provider == 'kraken' and not no_api"/>
-                <field name="kraken_api_sec_id" context="{'default_description': 'Kraken Private Key'}"
-                    invisible="provider != 'kraken' or no_api" required="provider == 'kraken' and not no_api"/>
+                <field name="kraken_api_key_id" context="{'default_description': 'Kraken API Key'}" attrs="{
+                        'invisible': ['|', ('crypto_provider', '!=', 'kraken'), ('no_api', '=', True)],
+                        'required': [('crypto_provider', '=', 'kraken'), ('no_api', '=', False)]
+                    }"/>
+                <field name="kraken_api_sec_id" context="{'default_description': 'Kraken Private Key'}" attrs="{
+                        'invisible': ['|', ('crypto_provider', '!=', 'kraken'), ('no_api', '=', True)],
+                        'required': [('crypto_provider', '=', 'kraken'), ('no_api', '=', False)]
+                    }"/>
             </xpath>
         </field>
     </record>

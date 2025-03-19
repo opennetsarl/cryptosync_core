@@ -24,7 +24,7 @@
                             type="object"
                             title="Open on CoinGecko"
                             class="btn-sm btn-link mb4" icon="fa-external-link"
-                            invisible="not coingecko_api_code"/>
+                            attrs="{'invisible': [('coingecko_api_code', '=', False)]}"/>
                 </div>
             </xpath>
         </field>

@@ -14,7 +14,8 @@
                             type="object"
                             title="View on Etherscan"
                             class="btn-sm btn-link mb4" icon="fa-external-link"
-                            invisible="not ethereum_smart_contract or ethereum_smart_contract == 'ETH'"/>
+                            attrs="{'invisible': ['|', ('ethereum_smart_contract', '=', False), ('ethereum_smart_contract', '=', 'ETH')]}"
+                        />
                 </div>
             </xpath>
         </field>

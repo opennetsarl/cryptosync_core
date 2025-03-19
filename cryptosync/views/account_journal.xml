@@ -6,9 +6,9 @@
         <field name="model">account.journal</field>
         <field name="inherit_id" ref="account.view_account_journal_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='bank_account_number']" position="inside">
+            <xpath expr="//field[@name='bank_statements_source']" position="after">
                 <field name="crypto_provider_id" widget="radio" groups="cryptosync.group_crypto"
-                    invisible="bank_statements_source != 'crypto'" required="bank_statements_source == 'crypto'"/>
+                    attrs="{'invisible': [('bank_statements_source', '!=', 'crypto')], 'required': [('bank_statements_source', '=', 'crypto')]}"/>
             </xpath>
         </field>
     </record>
@@ -32,7 +32,7 @@
         <field name="name">account.journal.tree.crypto</field>
         <field name="model">account.journal</field>
         <field name="arch" type="xml">
-            <list editable="bottom" create="0">
+            <tree editable="bottom" create="0">
                 <field name="name"/>
                 <field name="crypto_provider_id"/>
                 <field name="bank_account_id"/>
@@ -42,7 +42,11 @@
                 <field name="suspense_account_id" optional="hide"/>
                 <field name="profit_account_id" optional="hide"/>
                 <field name="loss_account_id" optional="hide"/>
-            </list>
+                <field name="company_id" invisible="1"/>
+                <field name="company_partner_id" invisible="1"/>
+                <field name="type" invisible="1"/> <!-- used by default_account_id domain -->
+                <field name="type_control_ids" invisible="1"/> <!-- used by default_account_id domain -->
+            </tree>
         </field>
     </record>
 

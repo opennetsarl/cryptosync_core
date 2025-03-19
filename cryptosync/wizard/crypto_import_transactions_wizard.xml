@@ -11,16 +11,16 @@
                         <field name="company_id" invisible="1"/>
                         <field name="company_partner_id" invisible="1"/>
                         <field name="wallet_ids" widget="many2many_tags"
-                               invisible="use_csv" required="not use_csv"/>
+                            attrs="{'invisible': [('use_csv', '=', True)], 'required': [('use_csv', '=', False)]}"/>
                         <field name="wallet_id"
-                               invisible="not use_csv" required="use_csv"/>
+                            attrs="{'invisible': [('use_csv', '=', False)], 'required': [('use_csv', '=', True)]}"/>
                     </group>
                     <group>
                         <field name="csv_only" invisible="1"/>
-                        <field name="use_csv" readonly="csv_only"/>
+                        <field name="use_csv" attrs="{'readonly': [('csv_only', '=', True)]}"/>
                         <field name="csv_filename" invisible="1"/>
                         <field name="csv_file" filename="csv_filename"
-                               invisible="not use_csv" required="use_csv"/>
+                            attrs="{'invisible': [('use_csv', '=', False)], 'required': [('use_csv', '=', True)]}"/>
                     </group>
                 </group>
                 <footer>
@@ -28,12 +28,12 @@
                             type="object"
                             string="Import Transactions from API"
                             class="oe_highlight"
-                            invisible="use_csv"/>
+                            attrs="{'invisible': [('use_csv', '=', True)]}"/>
                     <button name="get_transactions_from_csv"
                             type="object"
                             string="Import Transactions from CSV"
                             class="oe_highlight"
-                            invisible="not use_csv"/>
+                            attrs="{'invisible': [('use_csv', '=', False)]}"/>
                 </footer>
             </form>
         </field>

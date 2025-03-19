@@ -1,3 +1,4 @@
+import base64
 import json
 import logging
 import time
@@ -51,8 +52,9 @@ class ResPartnerBank(models.Model):
                                 "data": tx,
                             }
                         )
-
-            transactions_data = [{**rec, "raw": json.dumps(rec["raw"])} for rec in transactions_data.values()]
+            transactions_data = [
+                {**rec, "raw": base64.b64encode(json.dumps(rec["raw"]).encode())} for rec in transactions_data.values()
+            ]
             all_transactions |= self.env["crypto.transaction"].create(transactions_data)
             # eth_wallets.crypto_sync_done = True
         return all_transactions

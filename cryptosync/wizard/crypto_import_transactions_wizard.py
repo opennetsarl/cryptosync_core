@@ -48,7 +48,7 @@ class CryptoImportTransactionsWizard(models.TransientModel):
                     "name": self.csv_filename + ":" + str(i),
                     "wallet_id": self.wallet_id.id,
                     "from_csv": True,
-                    "raw": json.dumps(row),
+                    "raw": base64.b64encode(json.dumps(row).encode()),
                     "state": "draft",
                 }
             )

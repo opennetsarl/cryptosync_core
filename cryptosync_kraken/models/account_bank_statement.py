@@ -1,3 +1,4 @@
+import base64
 import json
 from decimal import Decimal
 
@@ -17,7 +18,7 @@ class AccountBankStatement(models.Model):
             min_ts = float("inf")
             max_ts = 0
             for tx in statement.line_ids.crypto_transaction_id.transaction_id:
-                data = json.loads(tx.raw)["ledger_entry"]
+                data = json.loads(base64.b64decode(tx.raw).decode())["ledger_entry"]
                 ts = float(data.get("time", 0))
                 if ts < min_ts:
                     min_ts = ts

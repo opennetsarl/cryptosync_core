@@ -12,9 +12,9 @@
                         <field name="company_id" invisible="1"/>
                         <field name="company_partner_id" invisible="1"/>
                         <field name="wallet_id" context="{'default_crypto_provider_id': provider_id, 'default_partner_id': company_partner_id}"/>
-                        <field name="no_api" invisible="not provider"/>
+                        <field name="no_api" attrs="{'invisible': [('provider_id', '=', False)]}"/>
                         <field name="currency_ids" widget="many2many_tags"/>
-                        <div class="alert alert-warning" role="alert" invisible="not no_api">
+                        <div class="alert alert-warning" role="alert" attrs="{'invisible': [('no_api', '=', False)]}" colspan="2">
                             <p>If API connection is disable, only CSV imports will be available!</p>
                         </div>
                     </group>

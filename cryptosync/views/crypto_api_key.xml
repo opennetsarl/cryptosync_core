@@ -20,9 +20,9 @@
         <field name="name">crypto.api.key.tree</field>
         <field name="model">crypto.api.key</field>
         <field name="arch" type="xml">
-            <list>
+            <tree>
                 <field name="description"/>
-            </list>
+            </tree>
         </field>
     </record>
 

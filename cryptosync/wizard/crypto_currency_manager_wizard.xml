@@ -15,11 +15,11 @@
                     <notebook>
                         <page string="Suggestions">
                             <field name="suggestion_ids">
-                                <list no_open="1">
+                                <tree no_open="1">
                                     <field name="full_name"/>
                                     <field name="name"/>
                                     <button name="action_choose" string="Select" class="oe_highlight" type="object"/>
-                                </list>
+                                </tree>
                             </field>
                         </page>
                     </notebook>

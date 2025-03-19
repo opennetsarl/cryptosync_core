@@ -1,3 +1,4 @@
+import base64
 import json
 import logging
 import traceback
@@ -34,7 +35,7 @@ class CryptoTransaction(models.Model):
             errors = []
             address = transaction.wallet_id.acc_number.lower()
 
-            for tx in json.loads(transaction.raw):
+            for tx in json.loads(base64.b64decode(transaction.raw).decode()):
                 try:
                     data = tx["data"]
                     provider_source = tx["source"]

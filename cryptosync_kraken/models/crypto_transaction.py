@@ -1,3 +1,4 @@
+import base64
 import json
 import logging
 import traceback
@@ -23,7 +24,7 @@ class CryptoTransaction(models.Model):
         }
         for transaction in transactions:
             try:
-                tx = json.loads(transaction.raw)
+                tx = json.loads(base64.b64decode(transaction.raw).decode())
                 entry = tx["ledger_entry"]
                 outputs = [
                     {

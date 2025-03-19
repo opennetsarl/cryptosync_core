@@ -47,6 +47,7 @@ class CryptoProvider(models.Model):
             )
             for xmlid in (  # menus
                 "menu_crypto_wallet_template",
+                "menu_crypto_import_exchange_wizard_template",
                 "menu_crypto_transaction_template",
                 "menu_crypto_transaction_line_template",
                 "menu_crypto_move_template",
@@ -54,10 +55,15 @@ class CryptoProvider(models.Model):
                 "menu_crypto_journal_template",
             ):
                 template_menu = self.env.ref("cryptosync." + xmlid)
-                action = template_menu.action._get_action_dict()
-                action["name"] = action["name"].replace("Template", provider.name)
-                action["domain"] = action["domain"].replace("template", provider.code)
-                action["context"] = action["context"].replace("template_id", str(provider.id))
+                action = template_menu.action
+                action = {
+                    field: value
+                    for field, value in action.sudo().read()[0].items()
+                    if field in action._get_readable_fields()
+                }
+                action["name"] = (action["name"] or "").replace("Template", provider.name) or False
+                action["domain"] = (action["domain"] or "").replace("template", provider.code) or False
+                action["context"] = (action["context"] or "").replace("template_id", str(provider.id)) or False
                 action["view_ids"] = [
                     (0, 0, {"view_id": view_id, "view_mode": view_mode}) for view_id, view_mode in action["views"]
                 ]

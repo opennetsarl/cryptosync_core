@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "CryptoSync Ethereum",
-    "version": "18.0.1.0.0",
+    "version": "15.0.2.0.0",
     "description": """
 Sync transactions from [Etherscan](https://etherscan.io/)
 

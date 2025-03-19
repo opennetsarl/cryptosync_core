@@ -1,3 +1,4 @@
+import base64
 import json
 import logging
 
@@ -48,17 +49,18 @@ class ResPartnerBank(models.Model):
                     ):
                         _logger.info("Kraken transaction {ledger_id} already exists and was skipped.")
                         continue  # Already exists
-
                     transactions_data.append(
                         {
                             "name": ledger_id,
                             "wallet_id": kraken_account.id,
-                            "raw": json.dumps(
-                                {
-                                    "ledger_id": ledger_id,
-                                    "ledger_entry": ledger_entry,
-                                    "provider_source": "ledger",
-                                }
+                            "raw": base64.b64encode(
+                                json.dumps(
+                                    {
+                                        "ledger_id": ledger_id,
+                                        "ledger_entry": ledger_entry,
+                                        "provider_source": "ledger",
+                                    }
+                                ).encode()
                             ),
                             "state": "draft",
                         }

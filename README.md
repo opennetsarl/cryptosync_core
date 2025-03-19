@@ -1,4 +1,4 @@
-# CryptoSync for Odoo 18.0
+# CryptoSync for Odoo 15.0
 
 ## Core AGPL addons
 

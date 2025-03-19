@@ -1,3 +1,4 @@
+import base64
 import json
 import logging
 
@@ -31,7 +32,7 @@ class AccountBankStatement(models.Model):
 
             min_h = max_h = -1
             for tx in statement.line_ids.crypto_transaction_id.transaction_id:
-                for data in json.loads(tx.raw):
+                for data in json.loads(base64.b64decode(tx.raw).decode()):
                     height = int(data["data"].get("blockNumber", 0))
                     if not height:
                         continue

@@ -15,7 +15,7 @@
                             icon="fa-arrow-circle-o-down"
                             widget="statinfo"
                             groups="cryptosync.group_crypto"
-                            invisible="not crypto_rate_provider_id"/>
+                            attrs="{'invisible': [('crypto_rate_provider_id', '=', False)]}"/>
                 </div>
             </xpath>
             <xpath expr="//sheet" position="inside">
@@ -27,7 +27,7 @@
                         <!-- Inherit this element to add all new fields related to fiat AND crypto -->
                         <field name="crypto_rate_provider_id"/>
                     </group>
-                    <group name="crypto_only" invisible="not is_crypto">
+                    <group name="crypto_only" attrs="{'invisible': [('is_crypto', '=', False)]}">
                         <!-- Inherit this element to add all new fields related to cryptocurrencies only -->
                         <label for="crypto_unit"/>
                         <div>
