@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="cryptosync.view_res_config_settings_form_inherit_crypto"/>
         <field name="arch" type="xml">
             <xpath expr="//app[@name='cryptocurrencies']" position="inside">
-                <block title="Ehtereum" id="ethereum">
+                <block title="Ethereum" id="ethereum">
                     <setting string="Etherscan API Key">
                         <field name="etherscan_api_key_id" context="{'default_description': 'Etherscan API Key'}"/>
                     </setting>

@@ -6,17 +6,8 @@
         <field name="model">res.partner.bank</field>
         <field name="inherit_id" ref="base.view_partner_bank_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//sheet" position="inside">
-                <group groups="cryptosync.group_crypto">
-                    <group>
-                        <field name="crypto_provider_id"/>
-                        <field name="crypto_provider" invisible="1"/>
-                    </group>
-                </group>
-            </xpath>
             <xpath expr="//sheet/widget[@name='web_ribbon']" position="before">
                 <div class="oe_button_box" name="button_box">
-                    <field name="explorer_link" invisible="1"/>
                     <button name="open_on_explorer"
                             type="object"
                             string="Open on explorer"
@@ -25,6 +16,27 @@
                             invisible="not explorer_link"/>
                 </div>
             </xpath>
+            <xpath expr="//field[@name='bank_id']" position="after">
+                <field name="crypto_provider_id" groups="cryptosync.group_crypto"/>
+            </xpath>
+            <xpath expr="//field[@name='bank_id']" position="attributes">
+                <attribute name="invisible">crypto_provider</attribute>
+            </xpath>
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="crypto_currency_ids" widget="many2many_tags" groups="cryptosync.group_crypto"
+                       invisible="not crypto_provider" required="crypto_provider"/>
+            </xpath>
+            <xpath expr="//field[@name='currency_id']" position="attributes">
+                <attribute name="invisible">crypto_provider</attribute>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <group invisible="not crypto_provider" groups="cryptosync.group_crypto">
+                    <field name="crypto_no_api" invisible="not crypto_provider"/>
+                    <div class="alert alert-warning" role="alert" invisible="not crypto_no_api">
+                        <p>If API connection is disable, only CSV imports will be available!</p>
+                    </div>
+                </group>
+            </xpath>
         </field>
     </record>
 
@@ -32,33 +44,38 @@
         <field name="name">res.partner.bank.kanban.crypto</field>
         <field name="model">res.partner.bank</field>
         <field name="arch" type="xml">
-            <kanban create="0" class="o_account_kanban">
-                <header>
-                    <button string="New" name="action_open_crypto_import_exchange_wizard" type="object" class="btn btn-primary" display="always"/>
-                </header>
+            <kanban class="o_account_kanban">
+                <field name="crypto_transaction_count"/>
+                <field name="crypto_transaction_line_count"/>
                 <templates>
                     <t t-name="card">
                         <div class="d-flex justify-content-between">
                             <div class="d-flex gap-1">
-                                <field name="crypto_provider_image" widget="image" class="o_image_24_cover bg-transparent" invisible="not crypto_provider_image"/>
+                                <field name="crypto_provider_image" widget="image" class="o_image_24_cover" options="{'img_class': 'bg-transparent'}" invisible="not crypto_provider_image"/>
                                 <h3 class="w-auto"><field name="acc_number"/></h3>
                             </div>
-                            <button name="action_open_crypto_update_exchange_wizard" type="object"
+                            <!-- <button name="action_open_crypto_update_exchange_wizard" type="object"
                                 string="Settings" class="btn btn-link" icon="fa-gear"
-                                groups="cryptosync.group_crypto"/>
+                                groups="cryptosync.group_crypto"/> -->
                         </div>
                         <div class="d-flex gap-1" groups="cryptosync.group_crypto">
-                            <button string="View Transactions" name="action_open_crypto_transactions" type="object" class="btn btn-primary"/>
-                            <button string="Import" name="action_open_crypto_import_transactions_wizard" type="object" class="btn btn-secondary" icon="fa-download"/>
-                            <button invisible="crypto_output_type != 'statement' or crypto_transaction_line_count == 0" name="action_open_crypto_generate_statements_wizard" type="object" class="btn btn-secondary"
-                                ><field name="crypto_transaction_line_count"/> transactions waiting for statement</button>
-                            <button invisible="crypto_output_type != 'move' or crypto_transaction_line_count == 0" name="action_open_crypto_generate_statements_wizard" type="object" class="btn btn-secondary"
-                                ><field name="crypto_transaction_line_count"/> transactions waiting for move</button>
+                            <button name="action_open_crypto_import_transactions_wizard" type="object" class="btn btn-primary" string="Import" icon="fa-download"/>
+                            <button name="action_open_crypto_transactions" type="object" t-attf-class="btn {{record.crypto_transaction_count.raw_value ? 'btn-primary' : 'btn-secondary'}}"><field name="crypto_transaction_count"/> Transactions to Process</button>
+                        </div>
+                        <div class="d-flex gap-1" groups="cryptosync.group_crypto">
+                            <button name="action_open_crypto_transaction_lines" type="object" t-attf-class="btn {{record.crypto_transaction_line_count.raw_value ? 'btn-primary' : 'btn-secondary'}}"><field name="crypto_transaction_line_count"/> Transactions waiting for <field name="crypto_output_type"/></button>
                         </div>
                     </t>
                 </templates>
             </kanban>
         </field>
+    </record>
+
+    <record id="action_crypto_wallet" model="ir.actions.act_window">
+        <field name="name">Wallets and Accounts</field>
+        <field name="res_model">res.partner.bank</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('crypto_provider', '!=', False)]</field>
     </record>
 
 </odoo>
