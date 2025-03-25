@@ -52,6 +52,8 @@ class CryptoProvider(models.Model):
                 "menu_crypto_transaction_line_template",
                 "menu_crypto_move_template",
                 "menu_crypto_statement_template",
+                "menu_crypto_statement_line_template",
+                "menu_crypto_account_rule_template",
                 "menu_crypto_journal_template",
             ):
                 template_menu = self.env.ref("cryptosync." + xmlid)
@@ -67,13 +69,25 @@ class CryptoProvider(models.Model):
                 action["view_ids"] = [
                     (0, 0, {"view_id": view_id, "view_mode": view_mode}) for view_id, view_mode in action["views"]
                 ]
+                action["view_id"] = action["view_id"][0] if action["view_id"] else False
+                action["search_view_id"] = action["search_view_id"][0] if action["search_view_id"] else False
                 action_id = ActWindow.create(action)
+
+                active = True  # Disable a menu when output type made it irrelevant
+                if provider.output_type != "statement":
+                    if xmlid in ("menu_crypto_statement_template", "menu_crypto_statement_line_template"):
+                        active = False
+                elif provider.output_type != "move":
+                    if xmlid in ("menu_crypto_move_template", "menu_crypto_account_rule_template"):
+                        active = False
+
                 menu_id = Menu.create(
                     {
                         "name": template_menu.name,
                         "action": f"ir.actions.act_window,{action_id.id}",
                         "parent_id": provider_main_menu.id,
                         "sequence": template_menu.sequence,
+                        "active": active,
                     }
                 )
                 IrModelData.create(

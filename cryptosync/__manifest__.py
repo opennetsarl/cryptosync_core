@@ -27,7 +27,6 @@ Cryptocurrency base module for Odoo
         "wizard/crypto_currency_manager_wizard.xml",
         "wizard/crypto_currency_rate_wizard.xml",
         "wizard/crypto_generate_statements_wizard.xml",
-        "wizard/crypto_import_exchange_wizard.xml",
         "wizard/crypto_import_transactions_wizard.xml",
         "views/menu.xml",
         "data/provider_menu_template.xml",
