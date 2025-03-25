@@ -14,7 +14,9 @@ class CryptoTransactionLine(models.Model):
     _description = "Cryptocurrency Transaction Detail"
     _order = "date,name,id"
 
-    transaction_id = fields.Many2one("crypto.transaction", string="Master Transaction", readonly=True)
+    transaction_id = fields.Many2one(
+        "crypto.transaction", string="Master Transaction", readonly=True, ondelete="cascade"
+    )
 
     name = fields.Char("Label", readonly=True)
     date = fields.Datetime("Date", readonly=True)
@@ -93,7 +95,8 @@ class CryptoTransactionLine(models.Model):
     def create(self, vals_list):
         if self.env.context.get("fix_crypto_units"):
             currencies = {
-                cur.id: cur.crypto_unit for cur in self.env["res.currency"].with_context(active_test=False).search([])
+                cur.id: cur.crypto_unit or 1
+                for cur in self.env["res.currency"].with_context(active_test=False).search([])
             }
             for vals in vals_list:
                 currency_id = vals.get("currency_id")

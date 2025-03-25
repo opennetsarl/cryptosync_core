@@ -1,3 +1,4 @@
+from collections import defaultdict
 from decimal import Decimal
 
 from odoo import _, fields, models
@@ -79,8 +80,7 @@ class CryptoTransaction(models.Model):
 
     def unlink(self):
         self = self.filtered(lambda x: x.state in ("waiting", "draft", "ignored", "error", "ready"))
-        self.output_ids.unlink()
-        return super().unlink()
+        return super(CryptoTransaction, self).unlink()
 
     def generate_moves(self, journal_id):
         self = self.filtered(lambda x: x.state == "ready")
@@ -94,6 +94,9 @@ class CryptoTransaction(models.Model):
                 "crypto_transaction_id": tx.id,
                 "line_ids": [],
             }
+            names_count = defaultdict(int)
+            for output in tx.output_ids:
+                names_count[output.name] += 1
             for output in tx.output_ids:
                 if not output.account_id:
                     # raise UserError(_("No account matching! Please check your crypto account rules."))
@@ -103,18 +106,24 @@ class CryptoTransaction(models.Model):
                     "name": output.name,
                     "amount_currency": output.value,
                     "amount_currency_str": output.value_str,
-                    "debit": output.get_fiat_value() if output.value > 0 else 0,
+                    "debit": abs(output.get_fiat_value()) if output.value > 0 else 0,
                     "credit": abs(output.get_fiat_value()) if output.value < 0 else 0,
                     "currency_id": output.currency_id.id,
                     "account_id": output.journal_id.default_account_id.id,
                     "crypto_transaction_id": output.id,
                 }
                 move["line_ids"].append((0, 0, line))
-                line_2 = line.copy()
-                line_2["debit"], line_2["credit"] = line_2["credit"], line_2["debit"]
-                line_2["amount_currency"] *= -1
-                line_2["amount_currency_str"] = str(-Decimal(output.value_str))
-                line_2["account_id"] = output.account_id.id
+                if (output.name.startswith("BUY") and output.value > 0) or (
+                    output.name.startswith("SELL") and output.value < 0
+                ):
+                    # TODO: move this condition
+                    move["currency_id"] = output.currency_id.id
+                if names_count[output.name] == 1:
+                    line_2 = line.copy()
+                    line_2["debit"], line_2["credit"] = line_2["credit"], line_2["debit"]
+                    line_2["amount_currency"] *= -1
+                    line_2["amount_currency_str"] = str(-Decimal(output.value_str))
+                    line_2["account_id"] = output.account_id.id
                 move["line_ids"].append((0, 0, line_2))
             else:  # only executed if the previous loop did NOT break
                 delta = sum(line[2]["debit"] - line[2]["credit"] for line in move["line_ids"])

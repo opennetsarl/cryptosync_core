@@ -55,9 +55,9 @@ class CryptoProvider(models.Model):
             ):
                 template_menu = self.env.ref("cryptosync." + xmlid)
                 action = template_menu.action._get_action_dict()
-                action["name"] = action["name"].replace("Template", provider.name)
-                action["domain"] = action["domain"].replace("template", provider.code)
-                action["context"] = action["context"].replace("template_id", str(provider.id))
+                action["name"] = (action["name"] or "").replace("Template", provider.name) or False
+                action["domain"] = (action["domain"] or "").replace("template", provider.code) or False
+                action["context"] = (action["context"] or "").replace("template_id", str(provider.id)) or False
                 action["view_ids"] = [
                     (0, 0, {"view_id": view_id, "view_mode": view_mode}) for view_id, view_mode in action["views"]
                 ]
