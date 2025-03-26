@@ -10,7 +10,7 @@ class CryptoTransaction(models.Model):
     _order = "wallet_id,name,id"
 
     name = fields.Char("Transaction Identifier", readonly=True)
-    ref = fields.Char("Accounting Transaction Identifier", readonly=True)
+    ref = fields.Char("Reference", readonly=True)
     wallet_id = fields.Many2one("res.partner.bank", string="Wallet", readonly=True, ondelete="restrict")
     explorer_link = fields.Char("Explorer Link", compute="_compute_explorer_link")
 

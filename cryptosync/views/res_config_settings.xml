@@ -77,7 +77,7 @@
                     </div>
                     <h2>Modules Premium OPL</h2>
                     <div class="row mt16 o_settings_container" name="cryptosync_premium_modules">
-                        <p>The following modules required an active CryptoSync Premium license.</p>
+                        <p class="w-100">The following modules required an active CryptoSync Premium license.</p>
 
                         <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
@@ -106,7 +106,7 @@
                     </div>
                     <h2>Modules On-demand</h2>
                     <div class="row mt16 o_settings_container" name="cryptosync_ondemand_modules">
-                        <p>The following modules are not available yet, but can be developed on demand. Please contact us for more informations.</p>
+                        <p class="w-100">The following modules are not available yet, but can be developed on demand. Please contact us for more informations.</p>
 
                         <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
