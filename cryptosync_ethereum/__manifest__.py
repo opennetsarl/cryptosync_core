@@ -13,7 +13,10 @@ For some endpoints, a Etherscan API PRO subscription may be required.
     "category": "Accounting",
     "depends": ["cryptosync"],
     "data": [
+        "security/ir.model.access.csv",
         "data/crypto_provider.xml",
+        "views/crypto_eth_spamcoin.xml",
+        "views/crypto_transaction.xml",
         "views/res_config_settings.xml",
         "views/res_currency.xml",
     ],

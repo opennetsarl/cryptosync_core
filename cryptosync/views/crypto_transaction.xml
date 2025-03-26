@@ -53,6 +53,7 @@
                         <field name="name"/>
                         <field name="wallet_id"/>
                         <field name="from_csv" invisible="not from_csv"/>
+                        <field name="ref" invisible="not ref"/>
                         <field name="error" invisible="state != 'error'"/>
                     </group>
                     <notebook>

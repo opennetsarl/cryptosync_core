@@ -4,13 +4,15 @@ import traceback
 from datetime import datetime
 from decimal import Decimal
 
-from odoo import _, models
+from odoo import _, fields, models
 
 _logger = logging.getLogger(__name__)
 
 
 class CryptoTransaction(models.Model):
     _inherit = "crypto.transaction"
+
+    ethereum_spamcoin = fields.Char(readonly=True)
 
     def _process(self):
         super()._process()
@@ -30,8 +32,11 @@ class CryptoTransaction(models.Model):
             return
         ETH = currencies["ETH"]
 
+        blacklist = self.env["crypto.eth.spamcoin"].search([]).mapped("name")
+
         for transaction in transactions:
             errors = []
+            spamcoin = False
             address = transaction.wallet_id.acc_number.lower()
 
             for tx in json.loads(transaction.raw):
@@ -63,7 +68,9 @@ class CryptoTransaction(models.Model):
                         if provider_source in ("txlist", "txlistinternal"):
                             output["currency_id"] = ETH.id
                         elif provider_source == "tokentx":
-                            if data["contractAddress"] not in currencies:
+                            if data["contractAddress"] in blacklist:
+                                continue
+                            elif data["contractAddress"] not in currencies:
                                 errors.append(
                                     _(
                                         "No currency found with smart contract: {contractAddress}\n"
@@ -74,6 +81,7 @@ class CryptoTransaction(models.Model):
                                         'Otherwise, you have to create the currency and set the field "Ethereum Smart Contract" to "{contractAddress}".'
                                     ).format(**data)
                                 )
+                                spamcoin = spamcoin or data["contractAddress"]
                                 continue
                             output["currency_id"] = currencies[data["contractAddress"]].id
                         outputs.append(output)
@@ -102,8 +110,15 @@ class CryptoTransaction(models.Model):
             if errors:
                 transaction.state = "error"
                 transaction.error = "\n\n".join(errors)
+                transaction.ethereum_spamcoin = spamcoin
             else:
                 transaction.state = "ready"
+                transaction.ethereum_spamcoin = False
+
+    def action_add_to_eth_blacklist(self):
+        self.ensure_one()
+        if self.ethereum_spamcoin:
+            self.env["crypto.eth.spamcoin"].create({"name": self.ethereum_spamcoin})
 
     def _compute_explorer_link(self):
         super()._compute_explorer_link()

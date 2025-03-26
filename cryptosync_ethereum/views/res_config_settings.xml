@@ -11,6 +11,10 @@
                     <setting string="Etherscan API Key">
                         <field name="etherscan_api_key_id" context="{'default_description': 'Etherscan API Key'}"/>
                     </setting>
+                    <setting string="Address Blacklist">
+                        <button name="%(cryptosync_ethereum.action_crypto_eth_spamcoin)d" type="action"
+                                string="Manage Blacklist" class="btn-link" icon="oi-arrow-right"/>
+                    </setting>
                 </block>
             </xpath>
         </field>
