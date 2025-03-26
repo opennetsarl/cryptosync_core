@@ -120,7 +120,7 @@ class CryptoTransactionLine(models.Model):
         return res
 
     def generate_statements(self, group_by=None):
-        self = self.filtered(lambda x: x.state == "ready")
+        self = self.filtered(lambda x: x.wallet_id.crypto_output_type == "statement" and x.state == "ready")
         self._compute_journal_id()
 
         statements = self._generate_statement_lines(group_by)
@@ -252,6 +252,9 @@ class CryptoTransactionLine(models.Model):
 
             statement["journal_id"] = statement["journal_id"].id
         return statements
+
+    def generate_moves(self):
+        return self.transaction_id.generate_moves()
 
     def get_fiat_value(self) -> float:
         self.ensure_one()

@@ -12,8 +12,8 @@ _logger = logging.getLogger(__name__)
 class CryptoTransaction(models.Model):
     _inherit = "crypto.transaction"
 
-    def process(self):
-        super().process()
+    def _process(self):
+        super()._process()
         transactions = self.filtered(lambda x: x.wallet_id.crypto_provider == "ethereum")
         if not transactions:
             return

@@ -6,6 +6,10 @@
         <field name="model">crypto.transaction.line</field>
         <field name="arch" type="xml">
             <list create="0" edit="0" delete="0">
+                <header>
+                    <button name="generate_statements" type="object" string="Generate Statements"/>
+                    <button name="generate_moves" type="object" string="Generate Entries"/>
+                </header>
                 <field name="name"/>
                 <field name="date"/>
                 <field name="wallet_id"/>
@@ -15,6 +19,7 @@
                 <field name="currency_id" optional="hide"/>
                 <field name="description" optional="hide"/>
                 <field name="journal_id" optional="hide"/>
+                <field name="account_id" optional="hide"/>
                 <field name="state" optional="hide"/>
                 <button title="Open Transaction" name="action_open_parent" type="object" class="btn-sm btn-link mb4" icon="fa-arrow-right"/>
             </list>

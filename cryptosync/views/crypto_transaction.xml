@@ -44,7 +44,7 @@
                         <field name="explorer_link" invisible="1"/>
                         <button name="open_on_explorer"
                                 type="object"
-                                string="Open on explorer"
+                                string="Open on Explorer"
                                 class="oe_stat_button"
                                 icon="fa-link"
                                 invisible="not explorer_link"/>
@@ -84,6 +84,10 @@
         <field name="model">crypto.transaction</field>
         <field name="arch" type="xml">
             <list create="0" edit="0" delete="1">
+                <header>
+                    <button name="process" type="object" string="Process" class="oe_highlight"/>
+                    <button name="ignore" type="object" string="Ignore"/>
+                </header>
                 <field name="wallet_id"/>
                 <field name="name"/>
                 <field name="state"/>

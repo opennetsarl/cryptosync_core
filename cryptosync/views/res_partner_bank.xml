@@ -10,7 +10,7 @@
                 <div class="oe_button_box" name="button_box">
                     <button name="open_on_explorer"
                             type="object"
-                            string="Open on explorer"
+                            string="Open on Explorer"
                             class="oe_stat_button"
                             icon="fa-link"
                             invisible="not explorer_link"/>
@@ -25,6 +25,8 @@
             <xpath expr="//field[@name='currency_id']" position="after">
                 <field name="crypto_currency_ids" widget="many2many_tags" groups="cryptosync.group_crypto"
                        invisible="not crypto_provider" required="crypto_provider"/>
+                <field name="crypto_default_move_journal_id" groups="cryptosync.group_crypto"
+                       invisible="crypto_output_type != 'move'" required="crypto_output_type == 'move'"/>
             </xpath>
             <xpath expr="//field[@name='currency_id']" position="attributes">
                 <attribute name="invisible">crypto_provider</attribute>
@@ -54,9 +56,8 @@
                                 <field name="crypto_provider_image" widget="image" class="o_image_24_cover" options="{'img_class': 'bg-transparent'}" invisible="not crypto_provider_image"/>
                                 <h3 class="w-auto"><field name="acc_number"/></h3>
                             </div>
-                            <!-- <button name="action_open_crypto_update_exchange_wizard" type="object"
-                                string="Settings" class="btn btn-link" icon="fa-gear"
-                                groups="cryptosync.group_crypto"/> -->
+                            <button name="open_on_explorer" type="object" string="Open on Explorer"
+                                    class="btn btn-link" icon="fa-link" invisible="not explorer_link"/>
                         </div>
                         <div class="d-flex gap-1" groups="cryptosync.group_crypto">
                             <button name="action_open_crypto_import_transactions_wizard" type="object" class="btn btn-primary" string="Import" icon="fa-download"/>
@@ -64,6 +65,7 @@
                         </div>
                         <div class="d-flex gap-1" groups="cryptosync.group_crypto">
                             <button name="action_open_crypto_transaction_lines" type="object" t-attf-class="btn {{record.crypto_transaction_line_count.raw_value ? 'btn-primary' : 'btn-secondary'}}"><field name="crypto_transaction_line_count"/> Transactions waiting for <field name="crypto_output_type"/></button>
+                            <button name="action_open_crypto_generate_statements_wizard" type="object" class="" invisible="crypto_transaction_line_count == 0">Generate <field name="crypto_output_type"/></button>
                         </div>
                     </t>
                 </templates>

@@ -39,11 +39,15 @@ class CryptoTransaction(models.Model):
         self.output_ids.unlink()
         self.error = False
         self.state = "draft"
-        return self
 
     def process(self):  # output: [ready|error]
+        self = self.filtered(lambda x: x.state in ("draft", "error", "ready"))
+        self.reset()
+        self._process()
+
+    def _process(self):
         # to inherit
-        return self.reset()
+        return self
 
     def ignore(self):  # output: [ignored]
         self = self.filtered(lambda x: x.state in ("draft", "error", "ready"))
@@ -82,15 +86,18 @@ class CryptoTransaction(models.Model):
         self = self.filtered(lambda x: x.state in ("waiting", "draft", "ignored", "error", "ready"))
         return super(CryptoTransaction, self).unlink()
 
-    def generate_moves(self, journal_id):
-        self = self.filtered(lambda x: x.state == "ready")
+    def generate_moves(self, journal_id=False):
+        self = self.filtered(lambda x: x.wallet_id.crypto_output_type == "move" and x.state == "ready")
+        jid = journal_id.id if journal_id else False
+        if journal_id:
+            self = self.filtered("wallet_id.crypto_default_move_journal_id")
         self.output_ids._compute_account_id()
         moves = []
         for tx in self:
             move = {
                 # "name": "/",
                 "ref": tx.ref or tx.name,
-                "journal_id": journal_id.id,
+                "journal_id": jid or tx.wallet_id.crypto_default_move_journal_id.id,
                 "crypto_transaction_id": tx.id,
                 "line_ids": [],
             }
