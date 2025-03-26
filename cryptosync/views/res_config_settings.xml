@@ -8,7 +8,64 @@
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
                 <app data-string="Cryptocurrencies" string="Cryptocurrencies" name="cryptocurrencies"
-                    logo="/cryptosync/static/description/icon.png" groups="cryptosync.group_crypto"/>
+                    logo="/cryptosync/static/description/icon.png" groups="cryptosync.group_crypto">
+                    <block title="Modules Core AGPL" id="cryptosync_core_modules">
+                        <setting help="Get rates from CoinGecko.com">
+                            <field name="module_cryptosync_coingecko" string="CoinGecko" />
+                        </setting>
+                        <setting>
+                            <field name="module_cryptosync_bitcoin" string="Bitcoin (WIP)"/>
+                        </setting>
+                        <setting help="Get Ethereum transaction from Etherscan.io">
+                            <field name="module_cryptosync_ethereum" string="Ethereum"/>
+                        </setting>
+                        <setting>
+                            <field name="module_cryptosync_cosmos" string="Cosmos (WIP)"/>
+                        </setting>
+                        <setting help="Get transactions from Kraken (API)">
+                            <field name="module_cryptosync_kraken" string="Kraken"/>
+                        </setting>
+                        <setting>
+                            <field name="module_cryptosync_okx" string="OKX (WIP)"/>
+                        </setting>
+                    </block>
+                    <block title="Modules Premium OPL" id="cryptosync_premium_modules"
+                            help="The following modules required an active CryptoSync Premium license.">
+                        <setting help="Get transactions from Binance (CSV)">
+                            <field name="module_cryptosync_binance" string="Binance"/>
+                        </setting>
+                        <setting help="Get transactions from Swissquote (CSV)">
+                            <field name="module_cryptosync_swissquote" string="Swissquote"/>
+                        </setting>
+                    </block>
+                    <block title="Modules On-demand" id="cryptosync_ondemand_modules"
+                            help="The following modules are not available yet, but can be developed on demand. Please contact us for more informations.">
+                        <setting>
+                            <field name="module_cryptosync_alephium" string="Alephium"/>
+                        </setting>
+                        <setting>
+                            <field name="module_cryptosync_bybit" string="ByBit"/>
+                        </setting>
+                        <setting>
+                            <field name="module_cryptosync_coinbase" string="Coinbase"/>
+                        </setting>
+                        <setting>
+                            <field name="module_cryptosync_gateio" string="Gate.io"/>
+                        </setting>
+                        <setting>
+                            <field name="module_cryptosync_icp" string="ICP"/>
+                        </setting>
+                        <setting>
+                            <field name="module_cryptosync_kucoin" string="Kucoin"/>
+                        </setting>
+                        <setting>
+                            <field name="module_cryptosync_mexc" string="MEXC"/>
+                        </setting>
+                        <setting>
+                            <field name="module_cryptosync_solana" string="Solana"/>
+                        </setting>
+                    </block>
+                </app>
             </xpath>
         </field>
     </record>

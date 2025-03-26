@@ -25,13 +25,13 @@
 
 ### Financial Support
 
-- [Nym Technologies SA](https://nymtech.net/)
-- [Bity SA](https://bity.com/)
+- [Nym Technologies SA](https://nymtech.net/) (Ethereum, Kraken, OKX and NYX integrations)
+- [Bity SA](https://bity.com/) (Binance and Swissquote CSV import)
 
 ### Special Thanks
 
 - [Holding SA](https://hodling.ch/) (For their cryptocurrency workshops with the Open Net team)
-- [Odoo SA](https://www.odoo.com/) (The editor)
+- [Odoo SA](https://www.odoo.com/) (The publisher)
 
 ## Licenses
 
