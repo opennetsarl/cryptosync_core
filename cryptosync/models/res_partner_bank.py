@@ -14,7 +14,13 @@ class ResPartnerBank(models.Model):
     crypto_provider_image = fields.Image("Provider Icon", related="crypto_provider_id.image")
     crypto_currency_ids = fields.Many2many("res.currency", string="Currencies")
     crypto_no_api = fields.Boolean("Don't use API connection")
-    crypto_output_type = fields.Selection("Output Type", related="crypto_provider_id.output_type")
+    crypto_output_type = fields.Selection(string="Output Type", related="crypto_provider_id.output_type")
+    crypto_default_move_journal_id = fields.Many2one(
+        "account.journal",
+        string="Default Entry Journal",
+        domain=[("type", "=", "general")],
+        help="The journal where entries will be created",
+    )
     crypto_transaction_count = fields.Integer("Crypto Transactions Count", compute="_compute_crypto_transaction_count")
     crypto_transaction_line_count = fields.Integer(
         "Crypto Transaction Lines Count", compute="_compute_crypto_transaction_count"
@@ -57,6 +63,7 @@ class ResPartnerBank(models.Model):
         action["context"] = literal_eval(action["context"])
         action["context"]["default_journal_ids"] = self.journal_id.ids
         action["context"]["default_wallet_ids"] = self.ids
+        action["context"]["default_output_journal_id"] = self.crypto_default_move_journal_id.id
         return action
 
     def _prepare_crypto_journal_values(self):
