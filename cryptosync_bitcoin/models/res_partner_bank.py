@@ -1,6 +1,7 @@
 import json
 import logging
 
+import requests
 from btclib.bip32 import bip32, slip132
 from odoo import _, api, fields, models
 
@@ -28,7 +29,9 @@ class ResPartnerBank(models.Model):
         store=True,
     )
     bt_hd_wallet_id = fields.Many2one("res.partner.bank", string="HD Wallet")
-    bt_child_ids = fields.One2many("res.partner.bank", "bt_hd_wallet_id", string="Child Addresses")
+    bt_child_ids = fields.One2many(
+        "res.partner.bank", "bt_hd_wallet_id", string="Child Addresses", context={"active_test": False}
+    )
     bt_derivation_path = fields.Char("Derivation Path")
     bt_empty = fields.Boolean("Is Empty", compute="_compute_bt_empty")
 
@@ -137,36 +140,55 @@ class ResPartnerBank(models.Model):
             "view_mode": "list,form",
         }
 
+    def action_open_crypto_transactions(self):
+        action = super().action_open_crypto_transactions()
+        action["domain"] = [("wallet_id", "in", (self | self.bt_child_ids).ids)]
+        return action
+
+    def _compute_crypto_transaction_count(self):
+        super()._compute_crypto_transaction_count()
+        for wallet in self.filtered(
+            lambda x: x.crypto_provider == "bitcoin" and x.bt_address_format in ("xpub", "ypub", "zpub", "vpub")
+        ):
+            wallet.crypto_transaction_count += self.env["crypto.transaction"].search_count(
+                [("wallet_id", "in", wallet.bt_child_ids.ids), ("state", "in", ("draft", "error"))]
+            )
+            wallet.crypto_transaction_line_count += self.env["crypto.transaction.line"].search_count(
+                [("wallet_id", "in", wallet.bt_child_ids.ids), ("state", "=", "ready")]
+            )
+
     def get_transactions_from_api(self):
         all_transactions = super().get_transactions_from_api()
         btc_wallets = self.filtered(lambda x: x.crypto_provider == "bitcoin")
 
+        hd_wallets = btc_wallets.filtered(lambda x: x.bt_address_format in ("xpub", "ypub", "zpub", "vpub"))
+        btc_wallets -= hd_wallets
+        btc_wallets |= hd_wallets.bt_child_ids
+
         if btc_wallets:
-            transactions_data = {}
+            transactions_data = []
             for btc_wallet in btc_wallets:
-                for tx in eth_data:
-                    tx_hash = tx["hash"]
+                same_wallets = btc_wallet | btc_wallet.bt_hd_wallet_id.bt_child_ids
+                url = f"{self.env.company.bitcoin_api_url}/api/address/{btc_wallet.acc_number}/txs"
+                _logger.info("GET " + url)
+                for tx in requests.get(url).json():
+                    tx_hash = tx["txid"]
                     if self.env["crypto.transaction"].search_count(
-                        [("name", "=", tx_hash), ("wallet_id", "=", btc_wallet.id)], limit=1
+                        [
+                            ("name", "=", tx_hash),
+                            ("wallet_id", "in", same_wallets.ids),
+                        ],
+                        limit=1,
                     ):
-                        # If the main transaction already exists, we have to not create the children
-                        # because all children are created in the same time, so all of them already exist
-                        continue
-                    if tx_hash not in transactions_data:
-                        transactions_data[tx_hash] = {
+                        continue  # Transaction already exists
+                    transactions_data.append(
+                        {
                             "name": tx_hash,
                             "wallet_id": btc_wallet.id,
-                            "raw": [],
+                            "raw": json.dumps(tx),
                             "state": "draft",
                         }
-                    transactions_data[tx_hash]["raw"].append(
-                        {
-                            "source": source,
-                            "data": tx,
-                        }
                     )
-
-            transactions_data = [{**rec, "raw": json.dumps(rec["raw"])} for rec in transactions_data.values()]
             all_transactions |= self.env["crypto.transaction"].create(transactions_data)
             # btc_wallets.crypto_sync_done = True
         return all_transactions
@@ -176,4 +198,4 @@ class ResPartnerBank(models.Model):
         for wallet in self.filtered(
             lambda x: x.crypto_provider == "bitcoin" and x.bt_address_format not in ("xpub", "ypub", "zpub", "vpub")
         ):
-            wallet.explorer_link = self.env.company.bitcoin_api_url + "/address/" + wallet.acc_number
+            wallet.explorer_link = f"{self.env.company.bitcoin_api_url}/address/{wallet.acc_number}"
