@@ -89,4 +89,3 @@ class ResPartnerBank(models.Model):
         super()._compute_explorer_link()
         for wallet in self.filtered(lambda x: x.crypto_provider == "ethereum"):
             wallet.explorer_link = "https://etherscan.io/address/" + wallet.acc_number
-            wallet.explorer_link = "https://etherscan.io/address/" + wallet.acc_number

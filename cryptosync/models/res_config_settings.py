@@ -6,7 +6,7 @@ class ResConfigSettings(models.TransientModel):
 
     # Modules Core AGPL
     module_cryptosync_coingecko = fields.Boolean()
-    module_cryptosync_bitcoin = fields.Boolean(readonly=True)
+    module_cryptosync_bitcoin = fields.Boolean()
     module_cryptosync_ethereum = fields.Boolean()
     module_cryptosync_cosmos = fields.Boolean(readonly=True)
     module_cryptosync_kraken = fields.Boolean()

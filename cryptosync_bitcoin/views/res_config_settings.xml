@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_res_config_settings_form_inherit_crypto_bitcoin" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.crypto.bitcoin</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="cryptosync.view_res_config_settings_form_inherit_crypto"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='cryptocurrencies']" position="inside">
+                <block title="Bitcoin" id="bitcoin">
+                    <setting string="Bitcoin API URL">
+                        <field name="bitcoin_api_url"/>
+                        <p>
+                            Support for
+                            <ul>
+                                <li><a target="_blank" href="https://mempool.space">https://mempool.space</a> (default)</li>
+                                <li><a target="_blank" href="https://blockstream.info">https://blockstream.info</a></li>
+                            </ul>
+                            We also support self-hosted versions.
+                        </p>
+                    </setting>
+                    <setting string="HD Wallet Address Gap">
+                        <field name="bitcoin_hd_gap_limit"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
