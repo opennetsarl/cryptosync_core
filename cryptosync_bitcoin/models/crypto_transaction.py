@@ -42,4 +42,4 @@ class CryptoTransaction(models.Model):
     def _compute_explorer_link(self):
         super()._compute_explorer_link()
         for tx in self.filtered(lambda x: x.wallet_id.crypto_provider == "bitcoin"):
-            tx.explorer_link = (tx.wallet_id.bitcoin_api_url or self.env.company.bitcoin_api_url) + tx.name
+            tx.explorer_link = f"{self.env.company.bitcoin_api_url}/tx/{tx.name}"
