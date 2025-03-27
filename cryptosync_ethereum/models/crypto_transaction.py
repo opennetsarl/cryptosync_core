@@ -125,5 +125,3 @@ class CryptoTransaction(models.Model):
         super()._compute_explorer_link()
         for tx in self.filtered(lambda x: x.wallet_id.crypto_provider == "ethereum"):
             tx.explorer_link = "https://etherscan.io/tx/" + tx.name
-            tx.explorer_link = "https://etherscan.io/tx/" + tx.name
-            tx.explorer_link = "https://etherscan.io/tx/" + tx.name
