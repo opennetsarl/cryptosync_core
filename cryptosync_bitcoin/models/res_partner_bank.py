@@ -28,62 +28,23 @@ class ResPartnerBank(models.Model):
         compute="_compute_bt_address_format",
         store=True,
     )
-    bt_hd_wallet_id = fields.Many2one("res.partner.bank", string="HD Wallet")
-    bt_child_ids = fields.One2many(
-        "res.partner.bank", "bt_hd_wallet_id", string="Child Addresses", context={"active_test": False}
-    )
+    bt_child_ids = fields.One2many("crypto.btc.address", "hd_wallet_id", string="Child Addresses")
     bt_derivation_path = fields.Char("Derivation Path")
-    bt_empty = fields.Boolean("Is Empty", compute="_compute_bt_empty")
 
     @api.depends("acc_number", "crypto_provider")
     def _compute_bt_address_format(self):
         self.bt_address_format = False
         for address in self.filtered(lambda x: x.crypto_provider == "bitcoin" and x.acc_number):
-            length = len(address.acc_number)
-            if address.acc_number.startswith(("04", "03", "02")):
-                address.bt_address_format = "P2PK"
-                continue
-            if address.acc_number.startswith("1") and 26 <= length <= 34:
-                address.bt_address_format = "P2PKH"
-                continue
-            if address.acc_number.startswith("3") and length == 34:
-                address.bt_address_format = "P2SH"
-                continue
-            if address.acc_number.startswith("bc1q") and length == 42:
-                address.bt_address_format = "P2WPKH"
-                continue
-            if address.acc_number.startswith("bc1q") and length == 62:
-                address.bt_address_format = "P2WSH"
-                continue
-            if address.acc_number.startswith("bc1p") and length == 62:
-                address.bt_address_format = "P2TR"
-                continue
-            if address.acc_number.startswith("xpub"):
-                address.bt_address_format = "xpub"
-                continue
-            if address.acc_number.startswith("ypub"):
-                address.bt_address_format = "ypub"
-                continue
-            if address.acc_number.startswith("zpub"):
-                address.bt_address_format = "zpub"
-                continue
-            if address.acc_number.startswith("vpub"):
-                address.bt_address_format = "vpub"
-                continue
-
-    def _compute_bt_empty(self):
-        self.bt_empty = True
-        for address in self.filtered(lambda x: x.crypto_provider == "bitcoin"):
-            if self.env["crypto.transaction"].search_count([("wallet_id", "=", address.id)], limit=1):
-                address.bt_empty = False
+            address.bt_address_format = self.env["crypto.btc.address"]._get_address_type(address.acc_number)
 
     def action_generate_bitcoin_addresses(self):
         GAP_LIMIT = self.env.company.bitcoin_hd_gap_limit or 20
-        bank_accounts = self.env["res.partner.bank"]
+        created_addresses = self.env["crypto.btc.address"]
 
         for wallet in self.filtered(
             lambda x: x.crypto_provider == "bitcoin" and x.bt_address_format in ("xpub", "ypub", "zpub", "vpub")
         ):
+            wallet.bt_child_ids._compute_is_empty()  # Force recompute
             for ttype in (0, 1):  # receiving / change
                 i = 0
                 empty_count = 0
@@ -93,104 +54,82 @@ class ResPartnerBank(models.Model):
                     new_key = bip32.derive(wallet.acc_number, der_path)
                     new_address = slip132.address_from_xpub(new_key)
 
-                    bank_account = (
-                        self.env["res.partner.bank"]
-                        .with_context(active_test=False)
-                        .search([("acc_number", "=", new_address)], limit=1)
+                    address = self.env["crypto.btc.address"].search(
+                        [("name", "=", new_address), ("hd_wallet_id", "=", wallet.id)], limit=1
                     )
-                    if not bank_account:
-                        bank_account = self.env["res.partner.bank"].create(
+                    if not address:
+                        address = self.env["crypto.btc.address"].create(
                             {
-                                "acc_number": new_address,
-                                "partner_id": wallet.partner_id.id,
-                                "bank_id": wallet.bank_id.id,
-                                "currency_id": wallet.currency_id.id,
-                                "crypto_currency_ids": wallet.crypto_currency_ids.ids,
-                                "bt_hd_wallet_id": wallet.id,
-                                "bt_derivation_path": der_path,
-                                "active": False,
+                                "name": new_address,
+                                "hd_wallet_id": wallet.id,
+                                "derivation_path": der_path,
                             }
                         )
-                    bank_accounts |= bank_account
-                    if bank_account.bt_empty:
+                        created_addresses |= address
+                    if address.is_empty:
                         empty_count += 1
                     else:
                         empty_count = 0
                     i += 1
-        return bank_accounts
-
-    def action_open_parent_bitcoin_addresses(self):
-        self.ensure_one()
-        return {
-            "type": "ir.actions.act_window",
-            "name": self.bt_hd_wallet_id.acc_number,
-            "res_model": "res.partner.bank",
-            "res_id": self.bt_hd_wallet_id.id,
-            "view_mode": "form",
-        }
+        return created_addresses
 
     def action_open_child_bitcoin_addresses(self):
         self.ensure_one()
         return {
             "type": "ir.actions.act_window",
             "name": _("Child Address of ") + self.acc_number,
-            "res_model": "res.partner.bank",
-            "domain": [("bt_hd_wallet_id", "=", self.id)],
+            "res_model": "crypto.btc.address",
+            "domain": [("hd_wallet_id", "=", self.id)],
             "context": {"active_test": False},
-            "view_mode": "list,form",
+            "view_mode": "list",
         }
-
-    def action_open_crypto_transactions(self):
-        action = super().action_open_crypto_transactions()
-        action["domain"] = [("wallet_id", "in", (self | self.bt_child_ids).ids)]
-        return action
-
-    def _compute_crypto_transaction_count(self):
-        super()._compute_crypto_transaction_count()
-        for wallet in self.filtered(
-            lambda x: x.crypto_provider == "bitcoin" and x.bt_address_format in ("xpub", "ypub", "zpub", "vpub")
-        ):
-            wallet.crypto_transaction_count += self.env["crypto.transaction"].search_count(
-                [("wallet_id", "in", wallet.bt_child_ids.ids), ("state", "in", ("draft", "error"))]
-            )
-            wallet.crypto_transaction_line_count += self.env["crypto.transaction.line"].search_count(
-                [("wallet_id", "in", wallet.bt_child_ids.ids), ("state", "=", "ready")]
-            )
 
     def get_transactions_from_api(self):
         all_transactions = super().get_transactions_from_api()
         btc_wallets = self.filtered(lambda x: x.crypto_provider == "bitcoin")
 
+        fetched_addresses = set()
         hd_wallets = btc_wallets.filtered(lambda x: x.bt_address_format in ("xpub", "ypub", "zpub", "vpub"))
-        btc_wallets -= hd_wallets
-        btc_wallets |= hd_wallets.bt_child_ids
 
-        if btc_wallets:
-            transactions_data = []
+        while 1:
+            transactions_data = dict()
             for btc_wallet in btc_wallets:
-                same_wallets = btc_wallet | btc_wallet.bt_hd_wallet_id.bt_child_ids
-                url = f"{self.env.company.bitcoin_api_url}/api/address/{btc_wallet.acc_number}/txs"
-                _logger.info("GET " + url)
-                for tx in requests.get(url).json():
-                    tx_hash = tx["txid"]
-                    if self.env["crypto.transaction"].search_count(
-                        [
-                            ("name", "=", tx_hash),
-                            ("wallet_id", "in", same_wallets.ids),
-                        ],
-                        limit=1,
-                    ):
-                        continue  # Transaction already exists
-                    transactions_data.append(
-                        {
+                if btc_wallet in hd_wallets:
+                    addresses = btc_wallet.bt_child_ids.mapped("name")
+                else:
+                    addresses = [btc_wallet.acc_number]
+                for address in addresses:
+                    if address in fetched_addresses:
+                        continue
+                    url = f"{self.env.company.bitcoin_api_url}/api/address/{address}/txs"
+                    _logger.info("GET " + url)
+                    for tx in requests.get(url).json():
+                        tx_hash = tx["txid"]
+
+                        if existing_tx := self.env["crypto.transaction"].search(
+                            [("name", "=", tx_hash), ("wallet_id", "=", btc_wallet.id)], limit=1
+                        ):
+                            if address not in existing_tx.btc_addresses:
+                                existing_tx.btc_addresses += "," + address
+                            continue  # Transaction already exists
+
+                        elif tx_hash in transactions_data:
+                            if tx_hash not in transactions_data[tx_hash]["btc_addresses"]:
+                                transactions_data[tx_hash]["btc_addresses"] += "," + address
+                            continue  # Transaction don't exist but will be created in this batch
+
+                        transactions_data[tx_hash] = {
                             "name": tx_hash,
                             "wallet_id": btc_wallet.id,
                             "raw": json.dumps(tx),
                             "state": "draft",
+                            "btc_addresses": address,
                         }
-                    )
-            all_transactions |= self.env["crypto.transaction"].create(transactions_data)
-            # btc_wallets.crypto_sync_done = True
+                    fetched_addresses.add(address)
+            all_transactions |= self.env["crypto.transaction"].create(transactions_data.values())
+            if not hd_wallets.action_generate_bitcoin_addresses():
+                _logger.info(f"Fetched BTC addresses: {fetched_addresses}")
+                break
         return all_transactions
 
     def _compute_explorer_link(self):

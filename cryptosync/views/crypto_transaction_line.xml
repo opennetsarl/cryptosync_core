@@ -18,8 +18,9 @@
                 <field name="value_str" optional="hide"/>
                 <field name="currency_id" optional="hide"/>
                 <field name="description" optional="hide"/>
-                <field name="journal_id" optional="hide"/>
+                <field name="partner_id" optional="hide"/>
                 <field name="account_id" optional="hide"/>
+                <field name="journal_id" optional="hide"/>
                 <field name="state" optional="hide"/>
                 <button title="Open Transaction" name="action_open_parent" type="object" class="btn-sm btn-link mb4" icon="fa-arrow-right"/>
             </tree>
