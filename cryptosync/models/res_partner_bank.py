@@ -1,6 +1,6 @@
 from ast import literal_eval
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -95,8 +95,11 @@ class ResPartnerBank(models.Model):
         return data
 
     def create_crypto_journals(self):
+        wallets = self.filtered(lambda x: x.crypto_provider_id and x.crypto_currency_ids and x.active)
+        if not wallets:
+            return
         all_journals = self.env["account.journal"]
-        for wallet in self.filtered("crypto_provider_id"):
+        for wallet in wallets:
             data = wallet._prepare_crypto_journal_values()
             all_journals |= self.env["account.journal"].create(data)
         self.env["crypto.transaction.line"].search(
@@ -113,6 +116,12 @@ class ResPartnerBank(models.Model):
             "target": "current",
             "domain": [("id", "in", all_journals.ids)],
         }
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        res.create_crypto_journals()
+        return res
 
     def write(self, vals):
         res = super().write(vals)

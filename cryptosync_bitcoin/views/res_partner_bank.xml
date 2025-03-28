@@ -7,13 +7,6 @@
         <field name="inherit_id" ref="base.view_partner_bank_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button name="action_open_parent_bitcoin_addresses"
-                        type="object"
-                        string="Parent HD Wallet"
-                        class="oe_stat_button"
-                        icon="fa-bitcoin"
-                        invisible="crypto_provider != 'bitcoin' or not bt_hd_wallet_id"
-                        groups="cryptosync.group_crypto"/>
                 <button name="action_open_child_bitcoin_addresses"
                         type="object"
                         string="Child Addresses"
@@ -32,7 +25,7 @@
             <xpath expr="//sheet" position="inside">
                 <group string="Bitcoin" name="bitcoin" invisible="crypto_provider != 'bitcoin' or crypto_no_api" groups="cryptosync.group_crypto">
                     <group>
-                        <field name="bt_derivation_path"/>
+                        <field name="bt_derivation_path" placeholder="m/{}/{}"/>
                     </group>
                     <group>
                         <field name="bt_address_format"/>

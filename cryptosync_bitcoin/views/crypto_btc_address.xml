@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_crypto_btc_address_tree" model="ir.ui.view">
+        <field name="name">crypto.btc.address.tree</field>
+        <field name="model">crypto.btc.address</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="derivation_path"/>
+                <field name="name"/>
+                <field name="hd_wallet_id"/>
+                <field name="address_format"/>
+                <field name="is_empty"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_crypto_btc_address" model="ir.actions.act_window">
+        <field name="name">Bitcoin Addresses</field>
+        <field name="res_model">crypto.btc.address</field>
+        <field name="view_mode">list</field>
+    </record>
+
+</odoo>

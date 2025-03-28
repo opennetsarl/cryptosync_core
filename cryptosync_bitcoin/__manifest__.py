@@ -11,7 +11,9 @@ Sync transactions from [mempool.space](https://mempool.space/) or [blockstream.i
     "category": "Accounting",
     "depends": ["cryptosync"],
     "data": [
+        "security/ir.model.access.csv",
         "data/crypto_provider.xml",
+        "views/crypto_btc_address.xml",
         "views/res_config_settings.xml",
         "views/res_partner_bank.xml",
     ],
