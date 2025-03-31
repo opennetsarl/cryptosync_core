@@ -1,5 +1,6 @@
 import json
 import logging
+import urllib.parse
 
 import requests
 from btclib.bip32 import bip32, slip132
@@ -138,3 +139,94 @@ class ResPartnerBank(models.Model):
             lambda x: x.crypto_provider == "bitcoin" and x.bt_address_format not in ("xpub", "ypub", "zpub", "vpub")
         ):
             wallet.explorer_link = f"{self.env.company.bitcoin_api_url}/address/{wallet.acc_number}"
+
+    #
+    # Native QR-related methods inherit
+    # VVV
+
+    def _btc_get_qr_vals(self, amount, currency, debtor_partner, free_communication, structured_communication):
+        # cf. BIP21 (https://github.com/bitcoin/bips/blob/master/bip-0021.mediawiki)
+        # bitcoin:<address>[?amount=<amount>][?label=<label>][?message=<message>]
+        address = False
+        move = False
+        if self.env.context.get("active_model") == "account.move" and self.env.context.get("active_id"):
+            # Not the best practice to get the move, but hey
+            move = self.env["account.move"].browse(self.env.context["active_id"])
+            address = move.btc_payment_address
+        if not address:
+            if self.bt_address_format in ("xpub", "ypub", "zpub", "vpub"):
+                der_path = self.bt_derivation_path.format(0, "%")
+                while not address:
+                    candidates = self.env["crypto.btc.address"].search(
+                        [("hd_wallet_id", "=", self.id), ("derivation_path", "=like", der_path)]
+                    )
+                    for i in range(len(candidates)):
+                        der_path = self.bt_derivation_path.format(0, i)
+                        choice = candidates.filtered(lambda x: x.derivation_path == der_path and x.is_empty)
+                        if choice:
+                            address = choice[0].name
+                            break
+                    else:
+                        # Loop did NOT break
+                        self.action_generate_bitcoin_addresses()
+            else:
+                address = self.acc_number
+        if move:
+            move.btc_payment_address = address
+        params = dict()
+        if currency.name == "BTC":
+            # Specify amount only if it's in BTC
+            # otherwise rate may vary and it's up to the customer to set the correct equivalent
+            params["amount"] = amount
+        params["label"] = (self.acc_holder_name or self.partner_id.name,)
+        if msg := free_communication or structured_communication:
+            params["message"] = msg
+        uri = f"bitcoin:{address}?{urllib.parse.urlencode(params)}"
+        return uri
+
+    def _get_qr_vals(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
+        if qr_method == "btc":
+            return self._btc_get_qr_vals(amount, currency, debtor_partner, free_communication, structured_communication)
+        return super()._get_qr_vals(
+            qr_method, amount, currency, debtor_partner, free_communication, structured_communication
+        )
+
+    def _get_qr_code_generation_params(
+        self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication
+    ):
+        if qr_method == "btc":
+            return {
+                "barcode_type": "QR",
+                "width": 128,
+                "height": 128,
+                "value": self._get_qr_vals(
+                    qr_method, amount, currency, debtor_partner, free_communication, structured_communication
+                ),
+            }
+        return super()._get_qr_code_generation_params(
+            qr_method, amount, currency, debtor_partner, free_communication, structured_communication
+        )
+
+    def _get_error_messages_for_qr(self, qr_method, debtor_partner, currency):
+        if qr_method == "btc":
+            if self.crypto_provider != "bitcoin":
+                return _("The account is not a Bitcoin wallet.")
+            if not self.bt_address_format:
+                return _("The Bitcoin address format is not recognized.")
+            return None
+        return super()._get_error_messages_for_qr(qr_method, debtor_partner, currency)
+
+    def _check_for_qr_code_errors(
+        self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication
+    ):
+        if qr_method == "btc":
+            return None
+        return super()._check_for_qr_code_errors(
+            qr_method, amount, currency, debtor_partner, free_communication, structured_communication
+        )
+
+    @api.model
+    def _get_available_qr_methods(self):
+        rslt = super()._get_available_qr_methods()
+        rslt.append(("btc", _("Bitcoin QR"), 100))
+        return rslt

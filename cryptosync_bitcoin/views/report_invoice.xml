@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//img[@id='qrcode_odoo_logo']" position="attributes">
+            <attribute name="t-if">o.qr_code_method != 'btc'</attribute>
+        </xpath>
+        <xpath expr="//div[@id='qrcode_info']/p" position="attributes">
+            <attribute name="t-if">o.qr_code_method != 'btc'</attribute>
+        </xpath>
+        <xpath expr="//div[@id='qrcode_info']" position="inside">
+            <p t-if="o.qr_code_method == 'btc'">Scan this QR Code<br/>with your Bitcoin wallet</p>
+        </xpath>
+        <xpath expr="//div[@id='qrcode']" position="after">
+            <p t-if="show_qr and o.qr_code_method == 'btc'" t-field="o.btc_payment_address"/>            
+        </xpath>
+    </template>
+
+</odoo>

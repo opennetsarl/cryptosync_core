@@ -13,7 +13,9 @@ Sync transactions from [mempool.space](https://mempool.space/) or [blockstream.i
     "data": [
         "security/ir.model.access.csv",
         "data/crypto_provider.xml",
+        "views/account_move.xml",
         "views/crypto_btc_address.xml",
+        "views/report_invoice.xml",
         "views/res_config_settings.xml",
         "views/res_partner_bank.xml",
     ],
