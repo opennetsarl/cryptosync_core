@@ -26,10 +26,18 @@
     </record>
 
     <record id="action_crypto_move_template" model="ir.actions.act_window">
-        <field name="name">Template Entries</field>
+        <field name="name">Template Journal Entries</field>
         <field name="res_model">account.move</field>
         <field name="view_mode">tree,kanban,form,activity</field>
         <field name="domain">[('crypto_transaction_id.wallet_id.crypto_provider', '=', 'template')]</field>
+    </record>
+
+    <record id="action_crypto_move_line_template" model="ir.actions.act_window">
+        <field name="name">Template Journal Items</field>
+        <field name="res_model">account.move.line</field>
+        <field name="view_mode">tree,pivot,graph,kanban</field>
+        <field name="view_id" ref="account.view_move_line_tree"/>
+        <field name="domain">[('display_type', 'not in', ('line_section', 'line_note')), ('move_id.crypto_transaction_id.wallet_id.crypto_provider', '=', 'template')]</field>
     </record>
 
     <record id="action_crypto_statement_template" model="ir.actions.act_window">
@@ -88,10 +96,15 @@
             action="action_crypto_transaction_line_template"
             sequence="30"/>
         <menuitem
-            name="Entries"
+            name="Journal Entries"
             id="menu_crypto_move_template"
             action="action_crypto_move_template"
             sequence="40"/>
+        <menuitem
+            name="Journal Items"
+            id="menu_crypto_move_line_template"
+            action="action_crypto_move_line_template"
+            sequence="45"/>
         <menuitem
             name="Statements"
             id="menu_crypto_statement_template"
@@ -101,7 +114,7 @@
             name="Statement Lines"
             id="menu_crypto_statement_line_template"
             action="action_crypto_statement_line_template"
-            sequence="60"/>
+            sequence="55"/>
         <menuitem
             name="Journals"
             id="menu_crypto_journal_template"
