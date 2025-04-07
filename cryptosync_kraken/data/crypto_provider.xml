@@ -5,6 +5,7 @@
         <field name="name">Kraken</field>
         <field name="code">kraken</field>
         <field name="prefix">K</field>
+        <field name="is_exchange">1</field>
         <field name="output_type">move</field>
         <field name="image" type="base64" file="cryptosync_kraken/static/description/icon.png"/>
     </record>
