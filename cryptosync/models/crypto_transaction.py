@@ -1,7 +1,11 @@
+import logging
 from collections import defaultdict
 from decimal import Decimal
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
+from odoo.modules.registry import Registry
+
+_logger = logging.getLogger(__name__)
 
 
 class CryptoTransaction(models.Model):
@@ -87,72 +91,85 @@ class CryptoTransaction(models.Model):
         return super(CryptoTransaction, self).unlink()
 
     def generate_moves(self, journal_id=False):
-        self = self.filtered(lambda x: x.wallet_id.crypto_output_type == "move" and x.state == "ready")
-        jid = journal_id.id if journal_id else False
-        if journal_id:
-            self = self.filtered("wallet_id.crypto_default_move_journal_id")
-        self.output_ids._compute_account_id()
-        moves = []
-        for tx in self:
-            move = {
-                # "name": "/",
-                "ref": tx.ref or tx.name,
-                "journal_id": jid or tx.wallet_id.crypto_default_move_journal_id.id,
-                "crypto_transaction_id": tx.id,
-                "line_ids": [],
-            }
-            names_count = defaultdict(int)
-            for output in tx.output_ids:
-                names_count[output.name] += 1
-            for output in tx.output_ids:
-                if not output.account_id:
-                    # raise UserError(_("No account matching! Please check your crypto account rules."))
-                    break
-                move["date"] = max(move["date"], output.date) if "date" in move else output.date
-                line = {
-                    "name": output.name,
-                    "amount_currency": output.value,
-                    "amount_currency_str": output.value_str,
-                    "debit": abs(output.get_fiat_value()) if output.value > 0 else 0,
-                    "credit": abs(output.get_fiat_value()) if output.value < 0 else 0,
-                    "currency_id": output.currency_id.id,
-                    "account_id": output.journal_id.default_account_id.id,
-                    "crypto_transaction_id": output.id,
+        with Registry(self.env.cr.dbname).cursor() as new_cr:
+            # Create a new env, so we can use cr.commit() safely
+            self = self.with_env(api.Environment(new_cr, self.env.uid, self.env.context))
+
+            self = self.filtered(lambda x: x.wallet_id.crypto_output_type == "move" and x.state == "ready")
+            jid = journal_id.id if journal_id else False
+            if journal_id:
+                self = self.filtered("wallet_id.crypto_default_move_journal_id")
+            self.output_ids._compute_account_id()
+            moves = []
+            for tx in self:
+                move = {
+                    # "name": "/",
+                    "ref": tx.ref or tx.name,
+                    "journal_id": jid or tx.wallet_id.crypto_default_move_journal_id.id,
+                    "crypto_transaction_id": tx.id,
+                    "line_ids": [],
                 }
-                move["line_ids"].append((0, 0, line))
-                if (output.name.startswith("BUY") and output.value > 0) or (
-                    output.name.startswith("SELL") and output.value < 0
-                ):
-                    # TODO: move this condition
-                    move["currency_id"] = output.currency_id.id
-                if names_count[output.name] == 1:
-                    line_2 = line.copy()
-                    line_2["debit"], line_2["credit"] = line_2["credit"], line_2["debit"]
-                    line_2["amount_currency"] *= -1
-                    line_2["amount_currency_str"] = str(-Decimal(output.value_str))
-                    line_2["account_id"] = output.account_id.id
-                move["line_ids"].append((0, 0, line_2))
-            else:  # only executed if the previous loop did NOT break
-                delta = sum(line[2]["debit"] - line[2]["credit"] for line in move["line_ids"])
-                if delta:
+                names_count = defaultdict(int)
+                for output in tx.output_ids:
+                    names_count[output.name] += 1
+                for output in tx.output_ids:
+                    if not output.account_id:
+                        # raise UserError(_("No account matching! Please check your crypto account rules."))
+                        break
+                    move["date"] = max(move["date"], output.date) if "date" in move else output.date
                     line = {
-                        "name": _("Delta"),
-                        "debit": -min(delta, 0),
-                        "credit": max(delta, 0),
-                        "account_id": self.env.company.income_currency_exchange_account_id.id
-                        if delta > 0
-                        else self.env.company.expense_currency_exchange_account_id.id,
+                        "name": output.name,
+                        "amount_currency": output.value,
+                        "amount_currency_str": output.value_str,
+                        "debit": abs(output.get_fiat_value()) if output.value > 0 else 0,
+                        "credit": abs(output.get_fiat_value()) if output.value < 0 else 0,
+                        "currency_id": output.currency_id.id,
+                        "account_id": output.journal_id.default_account_id.id,
+                        "crypto_transaction_id": output.id,
                     }
                     move["line_ids"].append((0, 0, line))
-                tx.output_ids.state = "done"
-                moves.append(move)
+                    if (output.name.startswith("BUY") and output.value > 0) or (
+                        output.name.startswith("SELL") and output.value < 0
+                    ):
+                        # TODO: move this condition
+                        move["currency_id"] = output.currency_id.id
+                    if names_count[output.name] == 1:
+                        line_2 = line.copy()
+                        line_2["debit"], line_2["credit"] = line_2["credit"], line_2["debit"]
+                        line_2["amount_currency"] *= -1
+                        line_2["amount_currency_str"] = str(-Decimal(output.value_str))
+                        line_2["account_id"] = output.account_id.id
+                    move["line_ids"].append((0, 0, line_2))
+                else:  # only executed if the previous loop did NOT break
+                    delta = sum(line[2]["debit"] - line[2]["credit"] for line in move["line_ids"])
+                    if delta:
+                        line = {
+                            "name": _("Delta"),
+                            "debit": -min(delta, 0),
+                            "credit": max(delta, 0),
+                            "account_id": self.env.company.income_currency_exchange_account_id.id
+                            if delta > 0
+                            else self.env.company.expense_currency_exchange_account_id.id,
+                        }
+                        move["line_ids"].append((0, 0, line))
+                    moves.append(move)
 
-        records = self.env["account.move"].create(moves)
+            n = int(self.env["ir.config_parameter"].sudo().get_param("cryptosync.account_move_batch_size", 100))
+            batches = [moves[i : i + n] for i in range(0, len(moves), n)]
+            all_ids = []
+            i, j = 0, len(batches)
+            for moves in batches:
+                records = self.env["account.move"].create(moves)
+                records.line_ids.crypto_transaction_id.state = "done"
+                all_ids += records.ids
+                new_cr.commit()
+                i += 1
+                _logger.info(f"Batch {i}/{j} imported")
         return {
             "type": "ir.actions.act_window",
             "name": _("Generated Moves"),
             "res_model": "account.move",
-            "domain": [("id", "in", records.ids)],
+            "domain": [("id", "in", all_ids)],
             "view_mode": "list,form",
         }
 
