@@ -13,6 +13,7 @@ class CryptoProvider(models.Model):
     prefix = fields.Char("Prefix")
     provide_tx = fields.Boolean("Provide Transactions", default=True, readonly=True)
     provide_rate = fields.Boolean("Provide Rates", default=False, readonly=True)
+    is_exchange = fields.Boolean("Is Exchange", readonly=True)
     output_type = fields.Selection(
         [
             ("statement", "Statements"),

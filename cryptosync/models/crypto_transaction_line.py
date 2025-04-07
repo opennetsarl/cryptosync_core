@@ -273,6 +273,15 @@ class CryptoTransactionLine(models.Model):
 
     def get_fiat_value(self) -> float:
         self.ensure_one()
+        if self.wallet_id.crypto_provider_id.is_exchange:
+            if (self.name.startswith("BUY") and self.value < 0) or (self.name.startswith("SELL") and self.value > 0):
+                self.currency_id._convert(self.value, self.env.company.currency_id, self.env.company, self.date)
+                for line in self.transaction_id.output_ids:
+                    if self.name == line.name and (
+                        (line.name.startswith("BUY") and line.value > 0)
+                        or (line.name.startswith("SELL") and line.value < 0)
+                    ):
+                        return line.get_fiat_value()
         return self.currency_id._convert(self.value, self.env.company.currency_id, self.env.company, self.date)
 
     def action_open_parent(self):
