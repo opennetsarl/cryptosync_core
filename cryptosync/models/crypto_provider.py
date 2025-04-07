@@ -51,6 +51,7 @@ class CryptoProvider(models.Model):
                 "menu_crypto_transaction_template",
                 "menu_crypto_transaction_line_template",
                 "menu_crypto_move_template",
+                "menu_crypto_move_line_template",
                 "menu_crypto_statement_template",
                 "menu_crypto_statement_line_template",
                 "menu_crypto_account_rule_template",
@@ -73,7 +74,11 @@ class CryptoProvider(models.Model):
                     if xmlid in ("menu_crypto_statement_template", "menu_crypto_statement_line_template"):
                         active = False
                 elif provider.output_type != "move":
-                    if xmlid in ("menu_crypto_move_template", "menu_crypto_account_rule_template"):
+                    if xmlid in (
+                        "menu_crypto_move_template",
+                        "menu_crypto_move_line_template",
+                        "menu_crypto_account_rule_template",
+                    ):
                         active = False
 
                 menu_id = Menu.create(
