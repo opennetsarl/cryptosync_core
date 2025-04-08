@@ -47,7 +47,6 @@ class CryptoProvider(models.Model):
             )
             for xmlid in (  # menus
                 "menu_crypto_wallet_template",
-                "menu_crypto_import_exchange_wizard_template",
                 "menu_crypto_transaction_template",
                 "menu_crypto_transaction_line_template",
                 "menu_crypto_move_template",
@@ -71,6 +70,7 @@ class CryptoProvider(models.Model):
                 ]
                 action["view_id"] = action["view_id"][0] if action["view_id"] else False
                 action["search_view_id"] = action["search_view_id"][0] if action["search_view_id"] else False
+                print(action)
                 action_id = ActWindow.create(action)
 
                 active = True  # Disable a menu when output type made it irrelevant

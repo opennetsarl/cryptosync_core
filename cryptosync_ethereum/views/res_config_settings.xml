@@ -6,13 +6,19 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="cryptosync.view_res_config_settings_form_inherit_crypto"/>
         <field name="arch" type="xml">
-            <xpath expr="//app[@name='cryptocurrencies']" position="inside">
-                <block title="Ethereum" id="ethereum">
-                    <setting string="Etherscan API Key">
-                        <field name="etherscan_api_key_id" context="{'default_description': 'Etherscan API Key'}"/>
-                    </setting>
-                </block>
-            </xpath>
+            <div data-key="cryptosync" position="inside">
+                <h2>Ethereum</h2>
+                <div class="row mt16 o_settings_container" name="ethereum">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="etherscan_api_key_id" context="{'default_description': 'Etherscan API Key'}"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label string="Etherscan API Key" for="etherscan_api_key_id"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </field>
     </record>
 

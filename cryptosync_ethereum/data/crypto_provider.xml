@@ -6,7 +6,8 @@
         <field name="code">ethereum</field>
         <field name="prefix">E</field>
         <field name="output_type">statement</field>
-        <field name="image" type="base64" file="cryptosync_ethereum/static/description/icon.svg"/>
+        <field name="image" type="base64" file="cryptosync_ethereum/static/description/icon.png"/>
+        <!-- svg not supported in this version -->
     </record>
 
 </odoo>
