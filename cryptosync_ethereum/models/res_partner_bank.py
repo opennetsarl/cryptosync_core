@@ -33,8 +33,8 @@ class ResPartnerBank(models.Model):
 
                     for tx in eth_data:
                         tx_hash = tx["hash"]
-                        if self.env["crypto.transaction"].search_count(
-                            [("name", "=", tx_hash), ("wallet_id", "=", eth_wallet.id)], limit=1
+                        if self.env["crypto.transaction"].search(
+                            [("name", "=", tx_hash), ("wallet_id", "=", eth_wallet.id)], count=True, limit=1
                         ):
                             # If the main transaction already exists, we have to not create the children
                             # because all children are created in the same time, so all of them already exist

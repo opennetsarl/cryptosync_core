@@ -1,3 +1,4 @@
+import base64
 import json
 import logging
 import traceback
@@ -34,7 +35,7 @@ class CryptoTransaction(models.Model):
                     transaction.state = "error"
                     continue
 
-                tx = json.loads(transaction.raw)
+                tx = json.loads(base64.b64decode(transaction.raw).decode())
                 block_time = datetime.fromtimestamp(tx["status"]["block_time"])
                 my_addresses = set(transaction.wallet_id.bt_child_ids.mapped("name"))
                 in_addrs = set(vin["prevout"]["scriptpubkey_address"] for vin in tx["vin"])
@@ -105,4 +106,5 @@ class CryptoTransaction(models.Model):
     def _compute_explorer_link(self):
         super()._compute_explorer_link()
         for tx in self.filtered(lambda x: x.wallet_id.crypto_provider == "bitcoin"):
+            tx.explorer_link = f"{self.env.company.bitcoin_api_url}/tx/{tx.name}"
             tx.explorer_link = f"{self.env.company.bitcoin_api_url}/tx/{tx.name}"

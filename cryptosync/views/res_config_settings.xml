@@ -28,7 +28,7 @@
                                 <field name="module_cryptosync_bitcoin"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label string="Bitcoin (WIP)" for="module_cryptosync_bitcoin"/>
+                                <label string="Bitcoin" for="module_cryptosync_bitcoin"/>
                             </div>
                         </div>
 

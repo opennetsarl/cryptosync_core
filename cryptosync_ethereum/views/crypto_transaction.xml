@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='error']" position="after">
                 <button name="action_add_to_eth_blacklist" type="object" class="btn btn-danger"
-                        invisible="not (state == 'error' and ethereum_spamcoin)"
+                        attrs="{'invisible': ['|', ('state', '!=', 'error'), ('ethereum_spamcoin', '=', False)]}"
                     >Blacklist <field name="ethereum_spamcoin" class="oe_inline"/></button>
             </xpath>
         </field>

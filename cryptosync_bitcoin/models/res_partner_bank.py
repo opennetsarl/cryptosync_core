@@ -1,3 +1,4 @@
+import base64
 import json
 import logging
 import urllib.parse
@@ -122,7 +123,7 @@ class ResPartnerBank(models.Model):
                         transactions_data[tx_hash] = {
                             "name": tx_hash,
                             "wallet_id": btc_wallet.id,
-                            "raw": json.dumps(tx),
+                            "raw": base64.b64encode(json.dumps(tx).encode()),
                             "state": "draft",
                             "btc_addresses": address,
                         }
@@ -149,9 +150,8 @@ class ResPartnerBank(models.Model):
         # bitcoin:<address>[?amount=<amount>][?label=<label>][?message=<message>]
         address = False
         move = False
-        if self.env.context.get("active_model") == "account.move" and self.env.context.get("active_id"):
-            # Not the best practice to get the move, but hey
-            move = self.env["account.move"].browse(self.env.context["active_id"])
+        if "ons_move_id" in self.env.context:
+            move = self.env["account.move"].browse(self.env.context["ons_move_id"])
             address = move.btc_payment_address
         if not address:
             if self.bt_address_format in ("xpub", "ypub", "zpub", "vpub"):
@@ -207,14 +207,10 @@ class ResPartnerBank(models.Model):
             qr_method, amount, currency, debtor_partner, free_communication, structured_communication
         )
 
-    def _get_error_messages_for_qr(self, qr_method, debtor_partner, currency):
+    def _eligible_for_qr_code(self, qr_method, debtor_partner, currency):
         if qr_method == "btc":
-            if self.crypto_provider != "bitcoin":
-                return _("The account is not a Bitcoin wallet.")
-            if not self.bt_address_format:
-                return _("The Bitcoin address format is not recognized.")
-            return None
-        return super()._get_error_messages_for_qr(qr_method, debtor_partner, currency)
+            return self.crypto_provider == "bitcoin" and self.bt_address_format
+        return super()._eligible_for_qr_code(qr_method, debtor_partner, currency)
 
     def _check_for_qr_code_errors(
         self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication

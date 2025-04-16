@@ -6,7 +6,8 @@
         <field name="code">bitcoin</field>
         <field name="prefix"/> <!-- not needed because only BTC is on Bitcoin blockchain -->
         <field name="output_type">statement</field>
-        <field name="image" type="base64" file="cryptosync_bitcoin/static/description/icon.svg"/>
+        <field name="image" type="base64" file="cryptosync_bitcoin/static/description/icon.png"/>
+        <!-- svg not supported in this version -->
     </record>
 
 </odoo>

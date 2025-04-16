@@ -62,9 +62,15 @@ class CryptoBtcAddress(models.Model):
     def _compute_is_empty(self):
         self.is_empty = True
         for address in self:
-            if self.env["crypto.transaction"].search_count(
-                [("wallet_id", "=", address.hd_wallet_id.id), ("btc_addresses", "ilike", address.name)], limit=1
-            ) or self.env["account.move"].search_count([("btc_payment_address", "ilike", address.name)], limit=1):
+            if self.env["crypto.transaction"].search(
+                [("wallet_id", "=", address.hd_wallet_id.id), ("btc_addresses", "ilike", address.name)],
+                count=True,
+                limit=1,
+            ) or self.env["account.move"].search(
+                [("btc_payment_address", "ilike", address.name)],
+                count=True,
+                limit=1,
+            ):
                 address.is_empty = False
 
     def action_open_parent_bitcoin_addresses(self):

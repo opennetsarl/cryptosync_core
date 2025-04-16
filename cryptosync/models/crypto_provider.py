@@ -70,7 +70,6 @@ class CryptoProvider(models.Model):
                 ]
                 action["view_id"] = action["view_id"][0] if action["view_id"] else False
                 action["search_view_id"] = action["search_view_id"][0] if action["search_view_id"] else False
-                print(action)
                 action_id = ActWindow.create(action)
 
                 active = True  # Disable a menu when output type made it irrelevant

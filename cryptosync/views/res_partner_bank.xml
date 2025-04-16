@@ -19,6 +19,7 @@
             </xpath>
             <xpath expr="//field[@name='bank_id']" position="after">
                 <field name="crypto_provider_id" groups="cryptosync.group_crypto"/>
+                <field name="crypto_provider" invisible="1" groups="cryptosync.group_crypto"/>
             </xpath>
             <xpath expr="//field[@name='bank_id']" position="attributes">
                 <attribute name="attrs">{'invisible': [('crypto_provider_id', '!=', False)]}</attribute>
@@ -55,7 +56,7 @@
                 <field name="explorer_link"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click" style="width: 450px;">
+                        <div class="oe_kanban_global_click overflow-hidden" style="width: 450px;">
                             <div class="d-flex justify-content-between">
                                 <div class="d-flex">
                                     <field name="crypto_provider_image" widget="image" options="{'size': [16, 16]}" attrs="{'invisible': [('crypto_provider_image', '=', False)]}"/>

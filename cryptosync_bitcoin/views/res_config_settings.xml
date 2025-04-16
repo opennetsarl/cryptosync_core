@@ -6,24 +6,51 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="cryptosync.view_res_config_settings_form_inherit_crypto"/>
         <field name="arch" type="xml">
-            <xpath expr="//app[@name='cryptocurrencies']" position="inside">
-                <block title="Bitcoin" id="bitcoin">
-                    <setting string="Bitcoin API URL">
-                        <field name="bitcoin_api_url"/>
-                        <p>
-                            Support for
-                            <ul>
-                                <li><a target="_blank" href="https://mempool.space">https://mempool.space</a> (default)</li>
-                                <li><a target="_blank" href="https://blockstream.info">https://blockstream.info</a></li>
-                            </ul>
-                            We also support self-hosted versions.
-                        </p>
-                    </setting>
-                    <setting string="HD Wallet Address Gap">
-                        <field name="bitcoin_hd_gap_limit"/>
-                    </setting>
-                </block>
-            </xpath>
+
+            <div data-key="cryptosync" position="inside">
+                <h2>Bitcoin</h2>
+                <div class="row mt16 o_settings_container" name="bitcoin">
+
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+
+                            <span class="o_form_label">Bitcoin API URL</span>
+                            <div class="text-muted">
+                                Support for
+                                <ul>
+                                    <li><a target="_blank" href="https://mempool.space">https://mempool.space</a> (default)</li>
+                                    <li><a target="_blank" href="https://blockstream.info">https://blockstream.info</a></li>
+                                </ul>
+                                We also support self-hosted versions.
+                            </div>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label string="API URL" for="bitcoin_api_url" class="col-lg-3 o_light_label"/>
+                                    <field name="bitcoin_api_url"/>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+
+                            <span class="o_form_label">HD Wallet Address Gap</span>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label string="Gap" for="bitcoin_hd_gap_limit" class="col-lg-3 o_light_label"/>
+                                    <field name="bitcoin_hd_gap_limit"/>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                </div>
+            </div>
         </field>
     </record>
 

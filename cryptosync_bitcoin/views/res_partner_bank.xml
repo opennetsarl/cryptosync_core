@@ -12,18 +12,18 @@
                         string="Child Addresses"
                         class="oe_stat_button"
                         icon="fa-list"
-                        invisible="crypto_provider != 'bitcoin' or bt_address_format not in ('xpub', 'ypub', 'zpub', 'vpub')"
+                        attrs="{'invisible': ['|', ('crypto_provider', '!=', 'bitcoin'), ('bt_address_format', 'not in', ('xpub', 'ypub', 'zpub', 'vpub'))]}"
                         groups="cryptosync.group_crypto"/>
                 <button name="action_generate_bitcoin_addresses"
                         type="object"
                         string="Generate more Child Addresses"
                         class="oe_stat_button"
                         icon="fa-refresh"
-                        invisible="crypto_provider != 'bitcoin' or bt_address_format not in ('xpub', 'ypub', 'zpub', 'vpub')"
+                        attrs="{'invisible': ['|', ('crypto_provider', '!=', 'bitcoin'), ('bt_address_format', 'not in', ('xpub', 'ypub', 'zpub', 'vpub'))]}"
                         groups="cryptosync.group_crypto"/>
             </xpath>
             <xpath expr="//sheet" position="inside">
-                <group string="Bitcoin" name="bitcoin" invisible="crypto_provider != 'bitcoin' or crypto_no_api" groups="cryptosync.group_crypto">
+                <group string="Bitcoin" name="bitcoin" attrs="{'invisible': ['|', ('crypto_provider', '!=', 'bitcoin'), ('crypto_no_api', '!=', False)]}" groups="cryptosync.group_crypto">
                     <group>
                         <field name="bt_derivation_path" placeholder="m/{}/{}"/>
                     </group>
