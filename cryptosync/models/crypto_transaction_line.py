@@ -198,6 +198,7 @@ class CryptoTransactionLine(models.Model):
                 "narration": tx.description,
                 "amount": tx.value,
                 "amount_currency_str": tx.value_str,
+                "journal_id": tx.journal_id.id,
                 "crypto_transaction_id": tx.id,
             }
 
