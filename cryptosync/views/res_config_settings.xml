@@ -191,7 +191,7 @@
         <field name="res_model">res.config.settings</field>
         <field name="view_mode">form</field>
         <field name="target">inline</field>
-        <field name="context">{'module': 'cryptocurrencies', 'bin_size': False}</field>
+        <field name="context">{'module': 'cryptosync', 'bin_size': False}</field>
     </record>
 
 </odoo>
