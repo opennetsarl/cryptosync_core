@@ -18,7 +18,7 @@
                             attrs="{'invisible': [('crypto_rate_provider_id', '=', False)]}"/>
                 </div>
             </xpath>
-            <xpath expr="//sheet" position="inside">
+            <xpath expr="//notebook" position="before">
                 <group string="Cryptocurrency Settings" groups="cryptosync.group_crypto">
                     <group colspan="2">
                         <field name="is_crypto"/>
