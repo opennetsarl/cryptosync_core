@@ -60,7 +60,9 @@ class ResCurrency(models.Model):
     def onchange_crypto_unit(self):
         selection = dict(self._fields["crypto_unit"].selection)
         for currency in self:
-            currency.symbol = selection.get(currency.crypto_unit, "") + (currency.currency_unit_label or currency.name or "")
+            currency.symbol = selection.get(currency.crypto_unit, "") + (
+                currency.currency_unit_label or currency.name or ""
+            )
 
     def action_crypto_currency_rate_wizard(self):
         self.ensure_one()
