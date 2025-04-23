@@ -100,6 +100,7 @@ class CryptoTransaction(models.Model):
             if journal_id:
                 self = self.filtered("wallet_id.crypto_default_move_journal_id")
             self.output_ids._compute_account_id()
+            self.output_ids._compute_journal_id()
             moves = []
             for tx in self:
                 move = {
@@ -113,7 +114,7 @@ class CryptoTransaction(models.Model):
                 for output in tx.output_ids:
                     names_count[output.name] += 1
                 for output in tx.output_ids:
-                    if not output.account_id:
+                    if not output.account_id or not output.journal_id.default_account_id:
                         # raise UserError(_("No account matching! Please check your crypto account rules."))
                         break
                     move["date"] = max(move["date"], output.date) if "date" in move else output.date
