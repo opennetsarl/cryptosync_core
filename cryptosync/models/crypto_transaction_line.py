@@ -276,7 +276,6 @@ class CryptoTransactionLine(models.Model):
         self.ensure_one()
         if self.wallet_id.crypto_provider_id.is_exchange:
             if (self.name.startswith("BUY") and self.value < 0) or (self.name.startswith("SELL") and self.value > 0):
-                self.currency_id._convert(self.value, self.env.company.currency_id, self.env.company, self.date)
                 for line in self.transaction_id.output_ids:
                     if self.name == line.name and (
                         (line.name.startswith("BUY") and line.value > 0)
