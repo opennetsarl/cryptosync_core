@@ -140,7 +140,7 @@ class CryptoTransaction(models.Model):
                         line_2["amount_currency"] *= -1
                         line_2["amount_currency_str"] = str(-Decimal(output.value_str))
                         line_2["account_id"] = output.account_id.id
-                    move["line_ids"].append((0, 0, line_2))
+                        move["line_ids"].append((0, 0, line_2))
                 else:  # only executed if the previous loop did NOT break
                     delta = sum(line[2]["debit"] - line[2]["credit"] for line in move["line_ids"])
                     if delta:
