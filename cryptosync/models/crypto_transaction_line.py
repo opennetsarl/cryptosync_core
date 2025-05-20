@@ -1,4 +1,5 @@
 import calendar
+import logging
 import math
 from ast import literal_eval
 from datetime import date, timedelta
@@ -7,6 +8,9 @@ from decimal import Decimal
 from odoo import _, api, fields, models
 from odoo.addons.cryptosync.utils.cryptosync import FEE_PATERN
 from odoo.exceptions import UserError
+from odoo.modules.registry import Registry
+
+_logger = logging.getLogger(__name__)
 
 
 class CryptoTransactionLine(models.Model):
@@ -14,7 +18,9 @@ class CryptoTransactionLine(models.Model):
     _description = "Cryptocurrency Transaction Detail"
     _order = "date,name,id"
 
-    transaction_id = fields.Many2one("crypto.transaction", string="Master Transaction", readonly=True)
+    transaction_id = fields.Many2one(
+        "crypto.transaction", string="Master Transaction", readonly=True, ondelete="cascade"
+    )
 
     name = fields.Char("Label", readonly=True)
     date = fields.Datetime("Date", readonly=True)
@@ -93,7 +99,8 @@ class CryptoTransactionLine(models.Model):
     def create(self, vals_list):
         if self.env.context.get("fix_crypto_units"):
             currencies = {
-                cur.id: cur.crypto_unit for cur in self.env["res.currency"].with_context(active_test=False).search([])
+                cur.id: cur.crypto_unit or 1
+                for cur in self.env["res.currency"].with_context(active_test=False).search([])
             }
             for vals in vals_list:
                 currency_id = vals.get("currency_id")
@@ -117,21 +124,33 @@ class CryptoTransactionLine(models.Model):
         return res
 
     def generate_statements(self, group_by=None):
-        self = self.filtered(lambda x: x.state == "ready")
-        self._compute_journal_id()
+        with Registry(self.env.cr.dbname).cursor() as new_cr:
+            # Create a new env, so we can use cr.commit() safely
+            self = self.with_env(api.Environment(new_cr, self.env.uid, self.env.context))
 
-        statements = self._generate_statement_lines(group_by)
-        statements = self._split_statements(statements)
-        statements = self._clean_statements(statements, group_by)
+            self = self.filtered(lambda x: x.wallet_id.crypto_output_type == "statement" and x.state == "ready")
+            self._compute_journal_id()
 
-        stmts = self.env["account.bank.statement"].create(statements)
-        # stmts.with_context(no_error=True).recompute_balance()
+            statements = self._generate_statement_lines(group_by)
+            statements = self._split_statements(statements)
+            statements = self._clean_statements(statements, group_by)
 
+            all_ids = []
+            i, j = 0, len(statements)
+            for statement in statements:
+                # Because statements contain up to 500 (default) lines, we create them by batch of one
+                records = self.env["account.bank.statement"].create(statement)
+                records.line_ids.crypto_transaction_id.state = "done"
+                # records.with_context(no_error=True).recompute_balance()
+                all_ids += records.ids
+                new_cr.commit()
+                i += 1
+                _logger.info(f"Statement {i}/{j} imported")
         return {
             "type": "ir.actions.act_window",
             "name": _("Generated Statements"),
             "res_model": "account.bank.statement",
-            "domain": [("id", "in", stmts.ids)],
+            "domain": [("id", "in", all_ids)],
             "view_mode": "list,form",
         }
 
@@ -179,6 +198,7 @@ class CryptoTransactionLine(models.Model):
                 "narration": tx.description,
                 "amount": tx.value,
                 "amount_currency_str": tx.value_str,
+                "journal_id": tx.journal_id.id,
                 "crypto_transaction_id": tx.id,
             }
 
@@ -187,11 +207,10 @@ class CryptoTransactionLine(models.Model):
 
             statement["line_ids"].append((0, 0, line))
 
-        self.state = "done"
         return list(statements.values())
 
     def _split_statements(self, statements):
-        LINES_LIMIT = int(self.env["ir.config_parameter"].sudo().get_param("crypto_sync.statement_lines_limit", 0))
+        LINES_LIMIT = int(self.env["ir.config_parameter"].sudo().get_param("cryptosync.statement_lines_limit", 0))
 
         if not LINES_LIMIT:
             return statements
@@ -250,8 +269,19 @@ class CryptoTransactionLine(models.Model):
             statement["journal_id"] = statement["journal_id"].id
         return statements
 
+    def generate_moves(self):
+        return self.transaction_id.generate_moves()
+
     def get_fiat_value(self) -> float:
         self.ensure_one()
+        if self.wallet_id.crypto_provider_id.is_exchange:
+            if (self.name.startswith("BUY") and self.value < 0) or (self.name.startswith("SELL") and self.value > 0):
+                for line in self.transaction_id.output_ids:
+                    if self.name == line.name and (
+                        (line.name.startswith("BUY") and line.value > 0)
+                        or (line.name.startswith("SELL") and line.value < 0)
+                    ):
+                        return line.get_fiat_value()
         return self.currency_id._convert(self.value, self.env.company.currency_id, self.env.company, self.date)
 
     def action_open_parent(self):

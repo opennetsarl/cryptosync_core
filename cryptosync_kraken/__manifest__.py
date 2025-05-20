@@ -15,6 +15,5 @@ Sync transactions from the [Kraken](https://www.kraken.com/) exchange
         "data/crypto_provider.xml",
         "views/res_currency.xml",
         "views/res_partner_bank.xml",
-        "wizard/crypto_import_exchange_wizard.xml",
     ],
 }

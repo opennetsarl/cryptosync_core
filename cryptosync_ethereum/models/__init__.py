@@ -1,5 +1,6 @@
 from . import (
     account_bank_statement,
+    crypto_eth_spamcoin,
     crypto_transaction,
     res_company,
     res_config_settings,

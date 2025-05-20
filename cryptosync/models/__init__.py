@@ -9,6 +9,7 @@ from . import (
     crypto_provider,
     crypto_transaction,
     crypto_transaction_line,
+    res_config_settings,
     res_currency,
     res_currency_rate,
     res_partner_bank,

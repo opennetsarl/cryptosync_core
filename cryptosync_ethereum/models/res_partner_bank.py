@@ -65,7 +65,7 @@ class ResPartnerBank(models.Model):
         else:
             # Without API key, we have a maximum rate of 5 calls/second
             last_call = float(
-                self.env["ir.config_parameter"].sudo().get_param("crypto_sync_etherscan.last_call_timestamp", 0)
+                self.env["ir.config_parameter"].sudo().get_param("cryptosync_etherscan.last_call_timestamp", 0)
             )
             s = max(0, DELAY - (time.time() - last_call))
             if s:
@@ -77,7 +77,7 @@ class ResPartnerBank(models.Model):
         _logger.info("GET " + url)
         data = requests.get(url).json()
 
-        self.env["ir.config_parameter"].sudo().set_param("crypto_sync_etherscan.last_call_timestamp", time.time())
+        self.env["ir.config_parameter"].sudo().set_param("cryptosync_etherscan.last_call_timestamp", time.time())
 
         if data["status"] == "0":
             if data["message"] == "No transactions found":
@@ -88,5 +88,4 @@ class ResPartnerBank(models.Model):
     def _compute_explorer_link(self):
         super()._compute_explorer_link()
         for wallet in self.filtered(lambda x: x.crypto_provider == "ethereum"):
-            wallet.explorer_link = "https://etherscan.io/address/" + wallet.acc_number
             wallet.explorer_link = "https://etherscan.io/address/" + wallet.acc_number
