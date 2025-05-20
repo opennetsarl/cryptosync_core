@@ -6,9 +6,182 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="base.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//form" position="inside">
-                <app data-string="Cryptocurrencies" string="Cryptocurrencies" name="cryptocurrencies"
-                    logo="/cryptosync/static/description/icon.png" groups="cryptosync.group_crypto"/>
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Cryptocurrencies" string="Cryptocurrencies" data-key="cryptosync" groups="cryptosync.group_crypto">
+                    <h2>Modules Core AGPL</h2>
+                    <div class="row mt16 o_settings_container" name="cryptosync_core_modules">
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_cryptosync_coingecko"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="CoinGecko" for="module_cryptosync_coingecko"/>
+                                <div class="text-muted">
+                                    Get rates from <a href="https://www.coingecko.com/" target="_blank">CoinGecko.com</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_cryptosync_bitcoin"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Bitcoin" for="module_cryptosync_bitcoin"/>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_cryptosync_ethereum"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Ethereum" for="module_cryptosync_ethereum"/>
+                                <div class="text-muted">
+                                    Get Ethereum transaction from <a href="https://etherscan.io/" target="_blank">Etherscan.io</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_cryptosync_cosmos"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Cosmos (WIP)" for="module_cryptosync_cosmos"/>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_cryptosync_kraken"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Kraken" for="module_cryptosync_kraken"/>
+                                <div class="text-muted">
+                                    Get transactions from <a href="https://www.kraken.com/" target="_blank">Kraken</a> (API)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_cryptosync_okx"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="OKX (WIP)" for="module_cryptosync_okx"/>
+                            </div>
+                        </div>
+
+                    </div>
+                    <h2>Modules Premium OPL</h2>
+                    <div class="row mt16 o_settings_container" name="cryptosync_premium_modules">
+                        <p class="w-100">The following modules required an active CryptoSync Premium license.</p>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_cryptosync_binance"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Binance" for="module_cryptosync_binance"/>
+                                <div class="text-muted">
+                                    Get transactions from <a href="https://www.swissquote.com" target="_blank">Binance</a> (CSV)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_cryptosync_swissquote"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Swissquote" for="module_cryptosync_swissquote"/>
+                                <div class="text-muted">
+                                    Get transactions from <a href="https://www.swissquote.com/" target="_blank">Swissquote</a> (CSV)
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <h2>Modules On-demand</h2>
+                    <div class="row mt16 o_settings_container" name="cryptosync_ondemand_modules">
+                        <p class="w-100">The following modules are not available yet, but can be developed on demand. Please contact us for more informations.</p>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_cryptosync_alephium"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Alephium" for="module_cryptosync_alephium"/>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_cryptosync_bybit"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="ByBit" for="module_cryptosync_bybit"/>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_cryptosync_coinbase"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Coinbase" for="module_cryptosync_coinbase"/>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_cryptosync_gateio"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Gate.io" for="module_cryptosync_gateio"/>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_cryptosync_icp"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="ICP" for="module_cryptosync_icp"/>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_cryptosync_kucoin"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Kucoin" for="module_cryptosync_kucoin"/>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_cryptosync_mexc"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="MEXC" for="module_cryptosync_mexc"/>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_cryptosync_solana"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Solana" for="module_cryptosync_solana"/>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </xpath>
         </field>
     </record>
@@ -18,7 +191,7 @@
         <field name="res_model">res.config.settings</field>
         <field name="view_mode">form</field>
         <field name="target">inline</field>
-        <field name="context">{'module': 'cryptocurrencies', 'bin_size': False}</field>
+        <field name="context">{'module': 'cryptosync', 'bin_size': False}</field>
     </record>
 
 </odoo>

@@ -7,7 +7,8 @@
         <field name="prefix">CG</field>
         <field name="provide_tx">0</field>
         <field name="provide_rate">1</field>
-        <field name="image" type="base64" file="cryptosync_coingecko/static/description/icon.svg"/>
+        <field name="image" type="base64" file="cryptosync_coingecko/static/description/icon.png"/>
+        <!-- svg not supported in this version -->
     </record>
 
 </odoo>

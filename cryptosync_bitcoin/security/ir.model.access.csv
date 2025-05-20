@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_crypto_btc_address,crypto_btc_address,model_crypto_btc_address,cryptosync.group_crypto,1,1,1,1

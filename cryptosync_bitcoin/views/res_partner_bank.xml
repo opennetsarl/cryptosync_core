@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_res_partner_bank_form_inherit_crypto_bitcoin" model="ir.ui.view">
+        <field name="name">res.partner.bank.form.inherit.crypto.bitcoin</field>
+        <field name="model">res.partner.bank</field>
+        <field name="inherit_id" ref="base.view_partner_bank_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_child_bitcoin_addresses"
+                        type="object"
+                        string="Child Addresses"
+                        class="oe_stat_button"
+                        icon="fa-list"
+                        attrs="{'invisible': ['|', ('crypto_provider', '!=', 'bitcoin'), ('bt_address_format', 'not in', ('xpub', 'ypub', 'zpub', 'vpub'))]}"
+                        groups="cryptosync.group_crypto"/>
+                <button name="action_generate_bitcoin_addresses"
+                        type="object"
+                        string="Generate more Child Addresses"
+                        class="oe_stat_button"
+                        icon="fa-refresh"
+                        attrs="{'invisible': ['|', ('crypto_provider', '!=', 'bitcoin'), ('bt_address_format', 'not in', ('xpub', 'ypub', 'zpub', 'vpub'))]}"
+                        groups="cryptosync.group_crypto"/>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <group string="Bitcoin" name="bitcoin" attrs="{'invisible': ['|', ('crypto_provider', '!=', 'bitcoin'), ('crypto_no_api', '!=', False)]}" groups="cryptosync.group_crypto">
+                    <group>
+                        <field name="bt_derivation_path" placeholder="m/{}/{}"/>
+                    </group>
+                    <group>
+                        <field name="bt_address_format"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

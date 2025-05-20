@@ -48,4 +48,9 @@ class CryptoCurrencyManagerWizardSuggestion(models.TransientModel):
         }
 
     def action_choose(self):
-        self.currency_id.write(self._prepare_data())
+        data = self._prepare_data()
+        for key in list(data):
+            if getattr(self.currency_id, key):
+                # do not overwrite existing fields
+                del data[key]
+        self.currency_id.write(data)

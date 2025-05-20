@@ -27,7 +27,7 @@ class CryptoGenerateStatementsWizard(models.TransientModel):
     date_from = fields.Date("From")
     date_to = fields.Date("To")
     group_by = fields.Selection([("week", "By week"), ("month", "By month"), ("year", "By year")], string="Group")
-    output_journal_id = fields.Many2one("account.journal", string="Output Journal")
+    output_journal_id = fields.Many2one("account.journal", string="Output Journal", domain=[("type", "=", "general")])
 
     def generate_statements(self):
         domain = [("state", "=", "ready")]

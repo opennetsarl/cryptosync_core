@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_move_form_inherit_crypto_bitcoin" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.crypto.bitcoin</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='qr_code_method']" position="after">
+                <field name="btc_payment_address" attrs="{'invisible': ['|', ('display_qr_code', '=', False), ('qr_code_method', '!=', 'btc')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -45,7 +45,7 @@
                         <field name="explorer_link" invisible="1"/>
                         <button name="open_on_explorer"
                                 type="object"
-                                string="Open on explorer"
+                                string="Open on Explorer"
                                 class="oe_stat_button"
                                 icon="fa-link"
                                 attrs="{'invisible': [('explorer_link', '=', False)]}"/>
@@ -54,6 +54,7 @@
                         <field name="name"/>
                         <field name="wallet_id"/>
                         <field name="from_csv" attrs="{'invisible': [('from_csv', '=', False)]}"/>
+                        <field name="ref" attrs="{'invisible': [('ref', '=', False)]}"/>
                         <field name="error" states="error"/>
                         <field name="has_ignored_line" invisible="1"/>
                     </group>
@@ -86,6 +87,10 @@
         <field name="model">crypto.transaction</field>
         <field name="arch" type="xml">
             <tree create="0" edit="0" delete="1">
+                <header>
+                    <button name="process" type="object" string="Process" class="oe_highlight"/>
+                    <button name="ignore" type="object" string="Ignore"/>
+                </header>
                 <field name="wallet_id"/>
                 <field name="name"/>
                 <field name="state"/>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//p[@name='payment_communication']/t[@t-if='o.partner_bank_id']" position="attributes">
+            <attribute name="t-if">o.partner_bank_id and (o.partner_bank_id.bt_address_format not in ('xpub', 'ypub', 'zpub', 'vpub') or o.btc_payment_address)</attribute>
+        </xpath>
+        <xpath expr="//p[@name='payment_communication']//span[@t-field='o.partner_bank_id']" position="attributes">
+            <attribute name="t-if">o.partner_bank_id.bt_address_format not in ('xpub', 'ypub', 'zpub', 'vpub')</attribute>
+        </xpath>
+        <xpath expr="//p[@name='payment_communication']//span[@t-field='o.partner_bank_id']" position="after">
+            <span t-field="o.btc_payment_address" class="font-weight-bold"/>
+        </xpath>
+        <xpath expr="//div[@id='qrcode']/p/strong" position="attributes">
+            <attribute name="t-if">o.qr_code_method != 'btc'</attribute>
+        </xpath>
+        <xpath expr="//div[@id='qrcode']/p/strong" position="after">
+            <strong class="text-center" t-if="o.qr_code_method == 'btc'">Scan this QR Code with your Bitcoin wallet.</strong><br/><br/>
+        </xpath>
+    </template>
+
+</odoo>

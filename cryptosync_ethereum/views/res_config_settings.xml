@@ -6,13 +6,44 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="cryptosync.view_res_config_settings_form_inherit_crypto"/>
         <field name="arch" type="xml">
-            <xpath expr="//app[@name='cryptocurrencies']" position="inside">
-                <block title="Ehtereum" id="ethereum">
-                    <setting string="Etherscan API Key">
-                        <field name="etherscan_api_key_id" context="{'default_description': 'Etherscan API Key'}"/>
-                    </setting>
-                </block>
-            </xpath>
+
+            <div data-key="cryptosync" position="inside">
+                <h2>Ethereum</h2>
+                <div class="row mt16 o_settings_container" name="ethereum">
+
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+
+                            <span class="o_form_label">Etherscan API Key</span>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label string="API Key" for="etherscan_api_key_id" class="col-lg-3 o_light_label"/>
+                                    <field name="etherscan_api_key_id" context="{'default_description': 'Etherscan API Key'}"/>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+
+                            <span class="o_form_label">Address Blacklist</span>
+                            <div class="content-group">
+                                <div class="mt8">
+                                    <button name="%(cryptosync_ethereum.action_crypto_eth_spamcoin)d" type="action"
+                                            string="Manage Blacklist" class="btn-link" icon="fa-arrow-right"/>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
         </field>
     </record>
 

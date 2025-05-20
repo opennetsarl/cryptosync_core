@@ -13,21 +13,6 @@
         </field>
     </record>
 
-    <!-- <record id="view_account_journal_dashboard_kanban_inherit_crypto" model="ir.ui.view">
-        <field name="name">account.journal.dashboard.kanban.inherit.crypto</field>
-        <field name="model">account.journal</field>
-        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
-        <field name="arch" type="xml">
-            <xpath expr="//div[@name='bank_cash_buttons']" position="inside">
-                <button t-if="dashboard.bank_statements_source == 'crypto' and dashboard.crypto_transaction_line_count > 0"
-                        name="action_open_crypto_generate_statements_wizard" type="object"
-                        class="btn btn-secondary d-block text-nowrap"
-                        groups="cryptosync.group_crypto"
-                    ><t t-out="dashboard.crypto_transaction_line_count"/> transactions waiting statement</button>
-            </xpath>
-        </field>
-    </record> -->
-
     <record id="view_account_journal_tree_crypto" model="ir.ui.view">
         <field name="name">account.journal.tree.crypto</field>
         <field name="model">account.journal</field>
