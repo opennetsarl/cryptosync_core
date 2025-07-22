@@ -30,7 +30,7 @@
 
 ### Special Thanks
 
-- [Holding SA](https://hodling.ch/) (For their cryptocurrency workshops with the Open Net team)
+- [Hodling SA](https://hodling.ch/) (For their cryptocurrency workshops with the Open Net team)
 - [Odoo SA](https://www.odoo.com/) (The publisher)
 
 ## Licenses
