@@ -55,13 +55,14 @@ class CryptoTransaction(models.Model):
 
     def ignore(self):  # output: [ignored]
         self = self.filtered(lambda x: x.state in ("draft", "error", "ready"))
-        self.output_ids.unlink()
         self.error = False
         self.state = "ignored"
+        self.output_ids.state = "ignored"
 
     def revert_ignore(self):  # output: [draft]
         self = self.filtered(lambda x: x.state == "ignored")
         self.state = "draft"
+        self.output_ids.unlink()
 
     def ignore_rest(self):  # output: [done]
         self.filtered(lambda x: x.state in ("ready", "partially")).output_ids.filtered(
