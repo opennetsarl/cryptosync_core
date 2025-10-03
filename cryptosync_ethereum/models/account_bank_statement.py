@@ -52,14 +52,14 @@ class AccountBankStatement(models.Model):
 
                 if statement.currency_id.ethereum_smart_contract == "ETH":
                     decimals = 18
-                    balance_url = "https://api.etherscan.io/api?module=account&action=balancehistory&address={address}&blockno={blockno}&apikey={apikey}".format(
+                    balance_url = "https://api.etherscan.io/v2/api?chainid=1&module=account&action=balancehistory&address={address}&blockno={blockno}&apikey={apikey}".format(
                         address=statement.journal_id.bank_account_id.acc_number,
                         blockno=height,
                         apikey=api_key,
                     )
                 else:
                     decimals = 6  # TODO: in db
-                    balance_url = "https://api.etherscan.io/api?module=account&action=tokenbalancehistory&contractaddress={contractaddress}&address={address}&blockno={blockno}&apikey={apikey}".format(
+                    balance_url = "https://api.etherscan.io/v2/api?chainid=1&module=account&action=tokenbalancehistory&contractaddress={contractaddress}&address={address}&blockno={blockno}&apikey={apikey}".format(
                         contractaddress=statement.currency_id.ethereum_smart_contract,
                         address=statement.journal_id.bank_account_id.acc_number,
                         blockno=height,
