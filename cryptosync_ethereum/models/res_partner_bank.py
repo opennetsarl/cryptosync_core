@@ -61,7 +61,7 @@ class ResPartnerBank(models.Model):
 
     @api.model
     def _etherscan_request(self, params):
-        url = "https://api.etherscan.io/api?module=account&action={action}&address={address}"
+        url = "https://api.etherscan.io/v2/api?chainid=1&module=account&action={action}&address={address}"
         if params.get("apikey"):
             url += "&apikey={apikey}"
         else:
