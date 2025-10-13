@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "CryptoSync CoinGecko",
-    "version": "18.0.1.0.0",
+    "version": "19.0.1.0.0",
     "description": """
 Get rates from [CoinGecko](https://www.coingecko.com/)
 """,

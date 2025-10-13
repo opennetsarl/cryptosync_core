@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "CryptoSync Kraken",
-    "version": "18.0.1.0.0",
+    "version": "19.0.1.0.0",
     "description": """
 Sync transactions from the [Kraken](https://www.kraken.com/) exchange
 

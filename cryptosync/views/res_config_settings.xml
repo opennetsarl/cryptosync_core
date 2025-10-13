@@ -14,7 +14,7 @@
                             <field name="module_cryptosync_coingecko" string="CoinGecko" />
                         </setting>
                         <setting>
-                            <field name="module_cryptosync_bitcoin" string="Bitcoin (WIP)"/>
+                            <field name="module_cryptosync_bitcoin" string="Bitcoin"/>
                         </setting>
                         <setting help="Get Ethereum transaction from Etherscan.io">
                             <field name="module_cryptosync_ethereum" string="Ethereum"/>
@@ -74,7 +74,6 @@
         <field name="name">Settings</field>
         <field name="res_model">res.config.settings</field>
         <field name="view_mode">form</field>
-        <field name="target">inline</field>
         <field name="context">{'module': 'cryptocurrencies', 'bin_size': False}</field>
     </record>
 

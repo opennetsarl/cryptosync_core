@@ -127,7 +127,7 @@ class ResPartnerBank(models.Model):
                             "btc_addresses": address,
                         }
                     fetched_addresses.add(address)
-            all_transactions |= self.env["crypto.transaction"].create(transactions_data.values())
+            all_transactions |= self.env["crypto.transaction"].create(list(transactions_data.values()))
             if not hd_wallets.action_generate_bitcoin_addresses():
                 _logger.info(f"Fetched BTC addresses: {fetched_addresses}")
                 break

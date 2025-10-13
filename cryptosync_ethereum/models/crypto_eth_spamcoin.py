@@ -9,7 +9,7 @@ class CryptoEthSpamcoin(models.Model):
     name = fields.Char("Address", required=True)
     note = fields.Text("Note")
 
-    _sql_constraints = [("unique_name", "UNIQUE(name)", "Address must be unique.")]
+    _sql_unique_name = models.Constraint("UNIQUE(name)", "Address must be unique.")
 
     @api.model_create_multi
     def create(self, vals_list):

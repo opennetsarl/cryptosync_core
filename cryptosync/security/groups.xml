@@ -3,6 +3,5 @@
     <record id="group_crypto" model="res.groups">
         <field name="name">Cryptocurrencies</field>
         <field name="comment">Group to see cryptocurrency fields and menus.</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 </odoo>

@@ -1,9 +1,9 @@
 # Do NOT update manually; changes here will be overwritten by Copier
-_commit: V1.2.0
+_commit: V1.2.0-1-gd601176
 _src_path: git@gitlab.open-net.ch:ons/ons-addons-repo-template.git
 enable_ci: true
 modules_name: cryptosync,cryptosync_coingecko,cryptosync_ethereum,cryptosync_kraken
-odoo_version: 18.0
+odoo_version: 19.0
 org_name: Open Net Sàrl
 org_slug: ons
 repo_name: CryptoSync Core

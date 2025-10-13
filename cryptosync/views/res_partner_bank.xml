@@ -31,13 +31,15 @@
             <xpath expr="//field[@name='currency_id']" position="attributes">
                 <attribute name="invisible">crypto_provider</attribute>
             </xpath>
-            <xpath expr="//sheet" position="inside">
-                <group invisible="not crypto_provider" groups="cryptosync.group_crypto">
-                    <field name="crypto_no_api" invisible="not crypto_provider"/>
-                    <div class="alert alert-warning" role="alert" invisible="not crypto_no_api">
-                        <p>If API connection is disable, only CSV imports will be available!</p>
-                    </div>
-                </group>
+            <xpath expr="//page[@name='internal_notes']" position="before">
+                <page string="Cryptocurrencies" name="page_crypto" invisible="not crypto_provider" groups="cryptosync.group_crypto">
+                    <group name="group_crypto">
+                        <field name="crypto_no_api" invisible="not crypto_provider"/>
+                        <div colspan="2" class="alert alert-warning" role="alert" invisible="not crypto_no_api">
+                            <p>If API connection is disable, only CSV imports will be available!</p>
+                        </div>
+                    </group>
+                </page>
             </xpath>
         </field>
     </record>
