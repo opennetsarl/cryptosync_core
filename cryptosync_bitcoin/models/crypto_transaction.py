@@ -36,7 +36,11 @@ class CryptoTransaction(models.Model):
 
                 tx = json.loads(transaction.raw)
                 block_time = datetime.fromtimestamp(tx["status"]["block_time"])
-                my_addresses = set(transaction.wallet_id.bt_child_ids.mapped("name"))
+                if transaction.wallet_id.bt_address_format in ("xpub", "ypub", "zpub", "vpub"):
+                    my_addresses = set(transaction.wallet_id.bt_child_ids.mapped("name"))
+                else:
+                    my_addresses = {transaction.wallet_id.acc_number}
+
                 in_addrs = set(vin["prevout"]["scriptpubkey_address"] for vin in tx["vin"])
                 # out_addrs = set(vout["scriptpubkey_address"] for vout in tx["vout"])
                 outputs = []
