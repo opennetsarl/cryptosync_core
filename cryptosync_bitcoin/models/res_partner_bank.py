@@ -1,10 +1,12 @@
 import json
 import logging
+import time
 import urllib.parse
 
 import requests
 from btclib.bip32 import bip32, slip132
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -39,6 +41,7 @@ class ResPartnerBank(models.Model):
             address.bt_address_format = self.env["crypto.btc.address"]._get_address_type(address.acc_number)
 
     def action_generate_bitcoin_addresses(self):
+        self._ensure_derivation_path()
         GAP_LIMIT = self.env.company.bitcoin_hd_gap_limit or 20
         created_addresses = self.env["crypto.btc.address"]
 
@@ -92,6 +95,8 @@ class ResPartnerBank(models.Model):
         fetched_addresses = set()
         hd_wallets = btc_wallets.filtered(lambda x: x.bt_address_format in ("xpub", "ypub", "zpub", "vpub"))
 
+        timeout = 1
+
         while 1:
             transactions_data = dict()
             for btc_wallet in btc_wallets:
@@ -104,7 +109,15 @@ class ResPartnerBank(models.Model):
                         continue
                     url = f"{self.env.company.bitcoin_api_url}/api/address/{address}/txs"
                     _logger.info("GET " + url)
-                    for tx in requests.get(url).json():
+                    r = requests.get(url)
+
+                    while r.status_code == 429:  # Too Many Requests
+                        timeout *= 2
+                        _logger.error(f"Error 429 Too Many Requests: Retrying in {timeout}s...")
+                        time.sleep(timeout)
+                        r = requests.get(url)
+
+                    for tx in r.json():
                         tx_hash = tx["txid"]
 
                         if existing_tx := self.env["crypto.transaction"].search(
@@ -140,6 +153,18 @@ class ResPartnerBank(models.Model):
         ):
             wallet.explorer_link = f"{self.env.company.bitcoin_api_url}/address/{wallet.acc_number}"
 
+    def _ensure_derivation_path(self):
+        for wallet in self.filtered(
+            lambda x: x.crypto_provider == "bitcoin" and x.bt_address_format in ("xpub", "ypub", "zpub", "vpub")
+        ):
+            if not wallet.bt_derivation_path:
+                raise UserError(
+                    _(
+                        "To use a xPubKey, you need to specify its derivation path "
+                        "(something like m/{}/{} or m/44'/0'/0'/{}/{})"
+                    )
+                )
+
     #
     # Native QR-related methods inherit
     # VVV
@@ -155,6 +180,7 @@ class ResPartnerBank(models.Model):
             address = move.btc_payment_address
         if not address:
             if self.bt_address_format in ("xpub", "ypub", "zpub", "vpub"):
+                self._ensure_derivation_path()
                 der_path = self.bt_derivation_path.format(0, "%")
                 while not address:
                     candidates = self.env["crypto.btc.address"].search(
