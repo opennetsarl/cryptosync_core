@@ -9,8 +9,8 @@
             <xpath expr="//sheet" position="inside">
                 <group string="Kraken" invisible="crypto_provider != 'kraken' or crypto_no_api">
                     <group>
-                        <field name="kraken_api_key_id" required="crypto_provider == 'kraken' and not crypto_no_api"/>
-                        <field name="kraken_api_sec_id" required="crypto_provider == 'kraken' and not crypto_no_api"/>
+                        <field name="kraken_api_key_id" required="crypto_provider == 'kraken' and not crypto_no_api" context="{'default_description': 'Kraken API Key'}"/>
+                        <field name="kraken_api_sec_id" required="crypto_provider == 'kraken' and not crypto_no_api" context="{'default_description': 'Kraken Private Key'}"/>
                     </group>
                     <group groups="base.group_no_one">
                         <field name="kraken_ledger_start"/>
