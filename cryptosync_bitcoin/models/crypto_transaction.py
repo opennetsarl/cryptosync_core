@@ -77,7 +77,7 @@ class CryptoTransaction(models.Model):
                     # We are on the OUTs: we are payed
                     for vout in tx["vout"]:
                         address = vout["scriptpubkey_address"]
-                        if address not in my_addresses:
+                        if not (address == transaction.wallet_id.acc_number or address in my_addresses):
                             # but maybe not only us, so ignore unknown addresses
                             continue
                         value = self.sat_to_btc(vout["value"])
