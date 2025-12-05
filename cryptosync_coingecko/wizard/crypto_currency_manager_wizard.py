@@ -38,7 +38,10 @@ class CryptoCurrencyManagerWizardSuggestion(models.TransientModel):
             data["coingecko_api_code"] = self.coingecko_api_code
             if "ethereum_smart_contract" in self.currency_id._fields:
                 # cryptosync_ethereum is installed
-                r = requests.get(COIN_URL + self.coingecko_api_code)
-                if r.status_code == 200:
-                    data["ethereum_smart_contract"] = r.json().get("platforms", {}).get("ethereum")
+                if self.coingecko_api_code == "ethereum":
+                    data["ethereum_smart_contract"] = "ETH"
+                else:
+                    r = requests.get(COIN_URL + self.coingecko_api_code)
+                    if r.status_code == 200:
+                        data["ethereum_smart_contract"] = r.json().get("platforms", {}).get("ethereum")
         return data
