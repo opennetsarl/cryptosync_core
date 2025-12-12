@@ -8,6 +8,12 @@
         <field name="arch" type="xml">
             <xpath expr="//sheet/*" position="before">
                 <div class="oe_button_box" name="button_box">
+                    <button name="%(base.act_view_currency_rates)d"
+                            type="action"
+                            string="Rates"
+                            class="oe_stat_button"
+                            icon="fa-money"
+                            widget="statinfo"/>
                     <button name="action_crypto_currency_rate_wizard"
                             type="object"
                             string="Get Rates"

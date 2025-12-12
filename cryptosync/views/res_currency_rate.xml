@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_res_currency_rate_tree_inherit_crypto" model="ir.ui.view">
+        <field name="name">res.currency.rate.list.inherit.crypto</field>
+        <field name="model">res.currency.rate</field>
+        <field name="inherit_id" ref="base.view_currency_rate_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="currency_id" readonly="1" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_res_currency_rate_form_inherit_crypto" model="ir.ui.view">
+        <field name="name">res.currency.rate.form.inherit.crypto</field>
+        <field name="model">res.currency.rate</field>
+        <field name="inherit_id" ref="base.view_currency_rate_form"/>
+        <field name="arch" type="xml">
+            <field name="currency_id" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+        </field>
+    </record>
+
+</odoo>
