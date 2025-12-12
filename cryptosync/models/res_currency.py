@@ -49,7 +49,10 @@ class ResCurrency(models.Model):
                 )
 
     def _cron_crypto_rate(self):
-        currencies = self.search([("crypto_rate_provider_id", "!=", False)])
+        existing_rates = self.env["res.currency.rate"].search([("name", "=", fields.Date.today())])
+        currencies = self.search(
+            [("crypto_rate_provider_id", "!=", False), ("currency_id", "not in", existing_rates.currency_id.ids)]
+        )
         for currency in currencies:
             try:
                 currency.get_crypto_currency_rate()
