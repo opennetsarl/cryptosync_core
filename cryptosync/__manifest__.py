@@ -23,6 +23,7 @@ Cryptocurrency base module for Odoo
         "views/crypto_transaction_line.xml",
         "views/res_config_settings.xml",
         "views/res_currency.xml",
+        "views/res_currency_rate.xml",
         "views/res_partner_bank.xml",
         "wizard/crypto_currency_manager_wizard.xml",
         "wizard/crypto_currency_rate_wizard.xml",
