@@ -7,7 +7,7 @@
         <field name="state">code</field>
         <field name="code">model._cron_crypto_rate()</field>
         <field name="interval_number">1</field>
-        <field name="interval_type">days</field>
+        <field name="interval_type">hours</field>
     </record>
 
     <!-- TODO: env[res.partner.bank]._cron_crypto_sync() -->
