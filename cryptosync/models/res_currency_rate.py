@@ -1,10 +1,12 @@
 from decimal import Decimal
 
-from odoo import api, models
+from odoo import api, fields, models
 
 
 class ResCurrencyRate(models.Model):
     _inherit = "res.currency.rate"
+
+    currency_id = fields.Many2one(readonly=False)  # useful for import
 
     @api.model_create_multi
     def create(self, vals_list):
