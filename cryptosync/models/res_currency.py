@@ -48,6 +48,7 @@ class ResCurrency(models.Model):
                     _("A rate already exists for {ccy} on {date}.").format(ccy=currency.name, date=rate_date)
                 )
 
+    @api.model
     def _cron_crypto_rate(self):
         existing_rates = self.env["res.currency.rate"].search([("name", "=", fields.Date.today())])
         currencies = self.search(

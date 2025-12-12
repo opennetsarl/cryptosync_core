@@ -135,6 +135,14 @@ class ResPartnerBank(models.Model):
     def get_transactions_from_csv(self, csv_file):
         raise UserError(_("CSV import not implemented yet! Sorry, please contact us."))
 
+    @api.model
+    def _cron_crypto_sync(self):
+        wallets = self.env.company.bank_ids.filtered_domain(
+            [("crypto_provider", "!=", False), ("crypto_no_api", "!=", True)]
+        )
+        # TODO: add something like last_sync to allow hourly sync
+        wallets.get_transactions_from_api()
+
     def _compute_explorer_link(self):
         self.filtered(lambda x: not x.explorer_link).explorer_link = False
 

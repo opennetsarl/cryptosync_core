@@ -10,6 +10,13 @@
         <field name="interval_type">hours</field>
     </record>
 
-    <!-- TODO: env[res.partner.bank]._cron_crypto_sync() -->
+    <record id="cron_crypto_sync" model="ir.cron">
+        <field name="name">CryptoSync</field>
+        <field name="model_id" ref="base.model_res_partner_bank"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_crypto_sync()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record>
 
 </odoo>

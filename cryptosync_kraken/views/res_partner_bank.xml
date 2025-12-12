@@ -16,7 +16,7 @@
                         <field name="kraken_ledger_start"/>
                         <field name="kraken_ledger_end"/>
                         <field name="kraken_ledger_ofs"/>
-                        <button name="kraken_reset" type="object" string="Reset" class="btn-outline-warning"/>
+                        <button name="kraken_reset" type="object" string="Reset" class="btn-outline-warning"/> <!-- TODO: confirm -->
                     </group>
                 </group>
             </xpath>
