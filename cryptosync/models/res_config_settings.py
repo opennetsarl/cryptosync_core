@@ -15,6 +15,7 @@ class ResConfigSettings(models.TransientModel):
     # Modules Premium OPL
     module_cryptosync_binance = fields.Boolean()
     module_cryptosync_swissquote = fields.Boolean()
+    module_cryptosync_tron = fields.Boolean()
 
     # Modules On-demand OPL
     module_cryptosync_alephium = fields.Boolean(readonly=True)

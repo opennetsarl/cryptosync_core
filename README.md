@@ -15,6 +15,7 @@
 | ---------------------------------------------- | --------------------------------------------------------------------- |
 | [CryptoSync Binance](cryptosync_binance)       | Import transactions from [Binance](https://www.binance.com/) CSV      |
 | [CryptoSync Swissquote](cryptosync_swissquote) | Import transactions from [Swissquote](https://www.swissquote.ch/) CSV |
+| [CryptoSync Tron](cryptosync_tron)             | Sync transactions from [TronGrid](https://www.trongrid.io/)           |
 
 ## Contributors
 
@@ -27,6 +28,7 @@
 
 - [Nym Technologies SA](https://nymtech.net/) (Ethereum, Kraken, OKX and NYX integrations)
 - [Bity SA](https://bity.com/) (Binance and Swissquote CSV import)
+- [Be Brave AG](https://www.be-brave.ch/) (Tron integration)
 
 ### Special Thanks
 

@@ -37,6 +37,9 @@
                         <setting help="Get transactions from Swissquote (CSV)">
                             <field name="module_cryptosync_swissquote" string="Swissquote"/>
                         </setting>
+                        <setting help="Get Tron transactions from TronGrid.io">
+                            <field name="module_cryptosync_tron" string="Tron"/>
+                        </setting>
                     </block>
                     <block title="Modules On-demand" id="cryptosync_ondemand_modules"
                             help="The following modules are not available yet, but can be developed on demand. Please contact us for more informations.">
