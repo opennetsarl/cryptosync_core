@@ -4,7 +4,7 @@ import traceback
 from datetime import datetime
 from decimal import Decimal
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -14,9 +14,11 @@ class CryptoTransaction(models.Model):
 
     btc_addresses = fields.Char("Involved BTC Addresses", readonly=True)
 
+    @api.model
     def btc_to_sats(self, btc) -> Decimal:
         return Decimal(btc) * Decimal(100_000_000)
 
+    @api.model
     def sat_to_btc(self, sats) -> Decimal:
         return Decimal(sats) / Decimal(100_000_000)
 
