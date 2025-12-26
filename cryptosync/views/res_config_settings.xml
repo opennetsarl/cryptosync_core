@@ -13,10 +13,10 @@
                         <setting help="Get rates from CoinGecko.com">
                             <field name="module_cryptosync_coingecko" string="CoinGecko" />
                         </setting>
-                        <setting>
-                            <field name="module_cryptosync_bitcoin" string="Bitcoin (WIP)"/>
+                        <setting help="Get Bitcoin transactions.io">
+                            <field name="module_cryptosync_bitcoin" string="Bitcoin"/>
                         </setting>
-                        <setting help="Get Ethereum transaction from Etherscan.io">
+                        <setting help="Get Ethereum transactions from Etherscan.io">
                             <field name="module_cryptosync_ethereum" string="Ethereum"/>
                         </setting>
                         <setting>
