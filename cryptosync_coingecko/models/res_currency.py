@@ -21,9 +21,12 @@ class ResCurrency(models.Model):
             if not currency.coingecko_api_code:
                 raise UserError(_("Unable to get rates without the CoinGecko API ID. Please fill it."))
 
-            url = "https://api.coingecko.com/api/v3/coins/{}/history?date={}".format(
-                currency.coingecko_api_code, rate_date.strftime("%d-%m-%Y")
-            )
+            api_key = self.env.company.coingecko_api_key_id.sudo().name
+            if api_key:
+                url = "https://pro-api.coingecko.com/api/v3/coins/{}/history?date={}&x_cg_pro_api_key={}"
+            else:
+                url = "https://api.coingecko.com/api/v3/coins/{}/history?date={}"
+            url = url.format(currency.coingecko_api_code, rate_date.strftime("%d-%m-%Y"), api_key)
             _logger.info("GET " + url)
             data = requests.get(url).json()
 
