@@ -10,11 +10,11 @@
                     <group>
                         <field name="currency_id"/>
                     </group>
-                </group>
-                <group>
                     <group>
                         <field name="use_range"/>
                     </group>
+                </group>
+                <group>
                     <group invisible="use_range">
                         <field name="rate_date"/>
                     </group>
