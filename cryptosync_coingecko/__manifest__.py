@@ -12,6 +12,7 @@ Get rates from [CoinGecko](https://www.coingecko.com/)
     "depends": ["cryptosync"],
     "data": [
         "data/crypto_provider.xml",
+        "views/res_config_settings.xml",
         "views/res_currency.xml",
     ],
 }
