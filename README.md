@@ -2,12 +2,13 @@
 
 ## Core AGPL addons
 
-| Addon                                        | Description                                                           |
-| -------------------------------------------- | --------------------------------------------------------------------- |
-| [CryptoSync](cryptosync)                     | Cryptocurrency base module for Odoo                                   |
-| [CryptoSync CoinGecko](cryptosync_coingecko) | Get rates from [CoinGecko](https://www.coingecko.com/)                |
-| [CryptoSync Ethereum](cryptosync_ethereum)   | Sync transactions from [Etherscan](https://etherscan.io/)             |
-| [CryptoSync Kraken](cryptosync_kraken)       | Sync transactions from the [Kraken](https://www.kraken.com/) exchange |
+| Addon                                        | Description                                                                                                     |
+| -------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| [CryptoSync](cryptosync)                     | Cryptocurrency base module for Odoo                                                                             |
+| [CryptoSync Bitcoin](cryptosync_bitcoin)     | Sync transactions from [mempool.space](https://mempool.space/) or [blockstream.info](https://blockstream.info/) |
+| [CryptoSync CoinGecko](cryptosync_coingecko) | Get rates from [CoinGecko](https://www.coingecko.com/)                                                          |
+| [CryptoSync Ethereum](cryptosync_ethereum)   | Sync transactions from [Etherscan](https://etherscan.io/)                                                       |
+| [CryptoSync Kraken](cryptosync_kraken)       | Sync transactions from the [Kraken](https://www.kraken.com/) exchange                                           |
 
 # Premium OPL addons
 

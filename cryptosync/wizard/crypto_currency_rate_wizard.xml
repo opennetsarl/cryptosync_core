@@ -11,7 +11,16 @@
                         <field name="currency_id"/>
                     </group>
                     <group>
+                        <field name="use_range"/>
+                    </group>
+                </group>
+                <group>
+                    <group invisible="use_range">
                         <field name="rate_date"/>
+                    </group>
+                    <group invisible="not use_range">
+                        <field name="rate_date" widget="daterange" options="{'end_date_field': 'rate_date_to'}" required="use_range"/>
+                        <field name="rate_date_to" invisible="1"/>
                     </group>
                 </group>
                 <footer>
