@@ -13,7 +13,7 @@ ruff = "^0.1"
 
 [tool.ruff]
 line-length = 120
-include = ['cryptosync/*.py', 'cryptosync_coingecko/*.py', 'cryptosync_ethereum/*.py', 'cryptosync_kraken/*.py']
+include = ['cryptosync/*.py', 'cryptosync_bitcoin/*.py', 'cryptosync_coingecko/*.py', 'cryptosync_ethereum/*.py', 'cryptosync_kraken/*.py']
 
 [tool.ruff.lint]
 select = [

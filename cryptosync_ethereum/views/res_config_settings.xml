@@ -22,7 +22,7 @@
                                     <field name="etherscan_api_key_id" context="{'default_description': 'Etherscan API Key'}"/>
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
 
@@ -37,7 +37,7 @@
                                             string="Manage Blacklist" class="btn-link" icon="fa-arrow-right"/>
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
 
