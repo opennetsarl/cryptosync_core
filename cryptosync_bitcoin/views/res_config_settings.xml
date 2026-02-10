@@ -30,7 +30,7 @@
                                     <field name="bitcoin_api_url"/>
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
 
@@ -45,7 +45,7 @@
                                     <field name="bitcoin_hd_gap_limit"/>
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
 
